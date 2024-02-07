@@ -1,28 +1,40 @@
 package main;
 
+import database.JDBC;
 import javafx.application.Application;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
+    private static Stage primaryStage;
+
+    public static Stage getPrimaryStage(){
+        return primaryStage;
+    }
+
     @Override
-    public void start(Stage stage) throws Exception{
-        // container for GUI elements
-        Parent root = FXMLLoader.load(getClass().getResource("/view/FirstScreen.fxml"));
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());// scene
 
-        stage.setTitle("First View");
-        stage.setScene(new Scene( root, 800, 600));
-
-        // displays stage
-        stage.show();
+        primaryStage = stage; // current stage(primaryStage) is stage
+        stage.setTitle("Scheduling Application");
+        stage.setScene(scene);
+        stage.show(); // shows on screen
     }
 
     public static void main(String[] args){
+
+        JDBC.startConnection();
+
         launch(args);
+
+        JDBC.closeConnection();
     }
 }
 
