@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94007dc8-39b9-4af7-a6ce-42114a118c61" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_java_8_0_25.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database/DatabaseConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database/JDBC.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/controller/HomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/database/LoginQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/database/ManageQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/Home.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedulingApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/schedulingApplication.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/FirstScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/JDBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/JDBC.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/FirstScreen.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

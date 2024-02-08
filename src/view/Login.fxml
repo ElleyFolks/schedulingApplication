@@ -7,43 +7,42 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane prefHeight="433.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane prefHeight="433.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
-      <Button layoutX="335.0" layoutY="294.0" mnemonicParsing="false" text="Login">
+      <Button fx:id="logInBtn" layoutX="335.0" layoutY="294.0" mnemonicParsing="false" onAction="#onLoginAction" text="Login">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Text layoutX="171.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In">
+      <Text fx:id="logInHeaderText" layoutX="154.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Header" wrappingWidth="149.0">
          <font>
             <Font size="25.0" />
          </font>
       </Text>
-      <VBox layoutX="180.0" layoutY="102.0" prefHeight="109.0" prefWidth="149.0" spacing="5.0">
+      <VBox layoutX="244.0" layoutY="102.0" prefHeight="109.0" prefWidth="220.0" spacing="5.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="test" wrappingWidth="149.0">
+            <Text fx:id="logInLocation" strokeType="OUTSIDE" strokeWidth="0.0" text="test" wrappingWidth="149.0">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <TextField />
-            <TextField />
+            <TextField fx:id="logInUsernameField" />
+            <TextField fx:id="logInPasswordField" />
          </children>
       </VBox>
-      <VBox layoutX="32.0" layoutY="102.0" prefHeight="109.0" prefWidth="100.0" spacing="5.0">
+      <VBox layoutX="14.0" layoutY="102.0" prefHeight="109.0" prefWidth="214.0" spacing="5.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Location:">
+            <Text fx:id="logInLocationTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Location">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+            <Text fx:id="logInUsernameTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+            <Text fx:id="logInPasswordTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
                <font>
                   <Font size="20.0" />
                </font>

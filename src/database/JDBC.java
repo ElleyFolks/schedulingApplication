@@ -29,28 +29,34 @@ public class JDBC {
         return conn;
     }
 
-    public static Connection startConnection() {
+    public static Connection establishConnection() {
         try {
             Class.forName(MYSQLJDBCDriver);
 
             conn = DriverManager.getConnection(jdbcURL, username, password);
 
             System.out.println("Connection successful");
-        } catch (SQLException e) {
+        }
+
+        catch (SQLException e) {
             System.out.println(e.getMessage());
-        } catch (ClassNotFoundException e) {
+        }
+
+        catch (ClassNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
         }
 
         return conn;
     }
 
-    public static void closeConnection() {
+    public static void endConnection() {
 
         try {
             conn.close();
             System.out.println("Connection closed");
-        } catch (SQLException e) {
+        }
+
+        catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

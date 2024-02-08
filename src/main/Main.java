@@ -22,19 +22,19 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());// scene
 
-        primaryStage = stage; // current stage(primaryStage) is stage
+        primaryStage = stage;
         stage.setTitle("Scheduling Application");
         stage.setScene(scene);
-        stage.show(); // shows on screen
+        stage.show();
     }
 
     public static void main(String[] args){
 
-        JDBC.startConnection();
+        JDBC.establishConnection();
 
         launch(args);
 
-        JDBC.closeConnection();
+        JDBC.endConnection();
     }
 }
 
