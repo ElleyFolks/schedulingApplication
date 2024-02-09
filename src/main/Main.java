@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Main extends Application {
 
@@ -24,14 +25,15 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load());// scene
 
         primaryStage = stage;
-        stage.setTitle("Scheduling Application");
+        //stage.setTitle("Scheduling Application");
         stage.setScene(scene);
         stage.show();
     }
 
     public static void main(String[] args){
 
-        Locale.setDefault(new Locale("fr"));
+        Locale.setDefault(new Locale("fr")); TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+
         JDBC.establishConnection();
 
         launch(args);

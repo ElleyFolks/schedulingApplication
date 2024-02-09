@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -15,10 +16,14 @@ import main.Main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class LoginController implements Initializable {
+
+    private ResourceBundle resourceBundle = ResourceBundle.getBundle("language/language", Locale.getDefault());
 
     @FXML
     private Button logInBtn;
@@ -44,6 +49,12 @@ public class LoginController implements Initializable {
     @FXML
     private Text logInUsernameText;
 
+    @FXML
+    private Text logInTimeZone;
+
+    @FXML
+    private Text logInTimeZoneText;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -53,14 +64,19 @@ public class LoginController implements Initializable {
 
         logInBtn.setText(resourceBundle.getString("loginBtnLabel"));
         logInHeaderText.setText(resourceBundle.getString("header"));
-        // TODO log in location once I have logic for it
+        logInLocation.setText(resourceBundle.getString("country"));
         logInLocationText.setText(resourceBundle.getString("locationText"));
         logInPasswordText.setText(resourceBundle.getString("passwordText"));
         logInUsernameText.setText(resourceBundle.getString("usernameText"));
+        logInTimeZone.setText(String.valueOf(ZoneId.of(TimeZone.getDefault().getID())));
+        logInTimeZoneText.setText(resourceBundle.getString("timeZoneText"));
     }
 
     @FXML
     void onLoginAction(ActionEvent event){
+        // input validation
+        testIfCredentialsEmpty(logInUsernameField.getText(), logInPasswordField.getText());
+
         try{
             boolean loginIsValid = LoginQuery.checkUserCredentials(logInUsernameField.getText(), logInPasswordField.getText());
 
@@ -76,6 +92,36 @@ public class LoginController implements Initializable {
             }
         }catch(Exception exception){
             exception.printStackTrace();
+        }
+    }
+
+    private void testIfCredentialsEmpty(String username, String password){
+        if(username.isEmpty()){
+            if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){
+                showAlertOnScreen("UserNameEmpty");
+            }
+        }
+
+        else if(password.isEmpty()){
+            if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){
+                showAlertOnScreen("PasswordEmpty");
+            }
+        }
+    }
+
+    void showAlertOnScreen(String alertString){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        switch (alertString){
+            case "UserNameEmpty":
+                alert.setTitle(resourceBundle.getString("errorTitle"));
+                alert.setContentText(resourceBundle.getString("usernameErrorContext"));
+                alert.showAndWait();
+                break;
+            case "PasswordEmpty":
+                alert.setTitle(resourceBundle.getString("errorTitle"));
+                alert.setContentText(resourceBundle.getString("passwordErrorContext"));
+                alert.showAndWait();
+                break;
         }
     }
 
