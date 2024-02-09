@@ -15,6 +15,7 @@ import main.Main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -29,23 +30,33 @@ public class LoginController implements Initializable {
     private Text logInLocation;
 
     @FXML
-    private Text logInLocationTxt;
+    private Text logInLocationText;
 
     @FXML
     private TextField logInPasswordField;
 
     @FXML
-    private Text logInPasswordTxt;
+    private Text logInPasswordText;
 
     @FXML
     private TextField logInUsernameField;
 
     @FXML
-    private Text logInUsernameTxt;
+    private Text logInUsernameText;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         System.out.println("Login screen initialized");
+
+        resourceBundle = ResourceBundle.getBundle("language/language", Locale.getDefault());
+
+        logInBtn.setText(resourceBundle.getString("loginBtnLabel"));
+        logInHeaderText.setText(resourceBundle.getString("header"));
+        // TODO log in location once I have logic for it
+        logInLocationText.setText(resourceBundle.getString("locationText"));
+        logInPasswordText.setText(resourceBundle.getString("passwordText"));
+        logInUsernameText.setText(resourceBundle.getString("usernameText"));
     }
 
     @FXML

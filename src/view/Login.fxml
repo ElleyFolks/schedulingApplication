@@ -14,7 +14,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <Text fx:id="logInHeaderText" layoutX="154.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Header" wrappingWidth="149.0">
+      <Text fx:id="logInHeaderText" layoutX="72.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Header" wrappingWidth="312.0">
          <font>
             <Font size="25.0" />
          </font>
@@ -32,17 +32,17 @@
       </VBox>
       <VBox layoutX="14.0" layoutY="102.0" prefHeight="109.0" prefWidth="214.0" spacing="5.0">
          <children>
-            <Text fx:id="logInLocationTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Location">
+            <Text fx:id="logInLocationText" strokeType="OUTSIDE" strokeWidth="0.0" text="Location">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="logInUsernameTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+            <Text fx:id="logInUsernameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="logInPasswordTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+            <Text fx:id="logInPasswordText" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
                <font>
                   <Font size="20.0" />
                </font>
