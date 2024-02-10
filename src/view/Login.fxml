@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -24,7 +25,7 @@
       <VBox layoutX="228.0" layoutY="102.0" prefHeight="76.0" prefWidth="157.0" spacing="10.0">
          <children>
             <TextField fx:id="logInUsernameField" />
-            <TextField fx:id="logInPasswordField" />
+            <PasswordField fx:id="logInPasswordField" />
          </children>
       </VBox>
       <VBox layoutX="33.0" layoutY="102.0" prefHeight="76.0" prefWidth="196.0" spacing="10.0">

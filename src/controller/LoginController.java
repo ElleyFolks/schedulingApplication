@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -38,7 +39,7 @@ public class LoginController implements Initializable {
     private Text logInLocationText;
 
     @FXML
-    private TextField logInPasswordField;
+    private PasswordField logInPasswordField;
 
     @FXML
     private Text logInPasswordText;
@@ -75,38 +76,52 @@ public class LoginController implements Initializable {
     @FXML
     void onLoginAction(ActionEvent event){
         // input validation
-        testIfCredentialsEmpty(logInUsernameField.getText(), logInPasswordField.getText());
+        if(isValidCredentials(logInUsernameField.getText(), logInPasswordField.getText())) {
 
-        try{
-            boolean loginIsValid = LoginQuery.checkUserCredentials(logInUsernameField.getText(), logInPasswordField.getText());
+            // attempting to log in if valid
+            try {
+                boolean loginIsValid = LoginQuery.checkUserCredentials(logInUsernameField.getText(), logInPasswordField.getText());
 
-            if(loginIsValid){
-                System.out.println("Successful login!");
+                if (loginIsValid) {
+                    System.out.println("Successful login!");
 
-                // Switching to home screen on successful login
-                try{
-                    changeToHome();
-                }catch(Exception fxExeption){
-                    fxExeption.printStackTrace();
+                    // switching to home screen on successful login
+                    try {
+                        changeToHome();
+                    } catch (Exception fxExeption) {
+                        fxExeption.printStackTrace();
+                    }
+                } else{
+                    // shows error if unsuccessful login
+                    System.out.println("Unsuccessful login.");
+                    showAlertOnScreen("LoginUnsuccessful");
                 }
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
-        }catch(Exception exception){
-            exception.printStackTrace();
         }
     }
 
-    private void testIfCredentialsEmpty(String username, String password){
+    private boolean isValidCredentials(String username, String password){
         if(username.isEmpty()){
             if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){
                 showAlertOnScreen("UserNameEmpty");
+                return false;
             }
         }
 
         else if(password.isEmpty()){
             if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){
                 showAlertOnScreen("PasswordEmpty");
+                return false;
             }
         }
+
+        if(!username.isEmpty() && !password.isEmpty()){
+        return true;
+        }
+
+        return false;
     }
 
     void showAlertOnScreen(String alertString){
@@ -120,6 +135,11 @@ public class LoginController implements Initializable {
             case "PasswordEmpty":
                 alert.setTitle(resourceBundle.getString("errorTitle"));
                 alert.setContentText(resourceBundle.getString("passwordErrorContext"));
+                alert.showAndWait();
+                break;
+            case "LoginUnsuccessful":
+                alert.setTitle(resourceBundle.getString("errorTitle"));
+                alert.setContentText(resourceBundle.getString("unsuccessfulLoginErrorContext"));
                 alert.showAndWait();
                 break;
         }
