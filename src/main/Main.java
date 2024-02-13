@@ -15,6 +15,8 @@ public class Main extends Application {
 
     private static Stage primaryStage;
 
+
+
     public static Stage getPrimaryStage(){
         return primaryStage;
     }
@@ -32,7 +34,7 @@ public class Main extends Application {
 
     public static void main(String[] args){
 
-        Locale.setDefault(new Locale("fr")); TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+        //Locale.setDefault(new Locale("fr")); TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
 
         JDBC.establishConnection();
 
