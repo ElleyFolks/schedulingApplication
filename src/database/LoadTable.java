@@ -38,8 +38,6 @@ public class LoadTable{
                     }
                     else{
                         homeTable.getColumns().add(column);
-                        // Set columns to resize based on content
-                        homeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
                     }
                 }
 
