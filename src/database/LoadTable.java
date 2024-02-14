@@ -19,19 +19,31 @@ public class LoadTable{
             throws SQLException {
         ObservableList<ObservableList<String>> loadedData = FXCollections.observableArrayList();
 
+        // creating columns dynamically
         if(resultSet != null){
             try{
-                for (int index = 0; index < resultSet.getMetaData().getColumnCount(); index++) {
-                    final int index2 = index;
+                for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
+                    final int index2 = i;
 
+                    // lambda expression
                     TableColumn<ObservableList<String>, String> column = new TableColumn<>(
-                            resultSet.getMetaData().getColumnName(index + 1));
-                    column.setCellValueFactory((Callback<TableColumn.CellDataFeatures<ObservableList<String>, String>,
-                            ObservableValue<String>>) param -> new SimpleStringProperty(param.getValue().get(index2)));
+                            resultSet.getMetaData().getColumnName(i + 1));
+                    column.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(index2)));
 
-                    homeTable.getColumns().add(column);
+                    String columnName = resultSet.getMetaData().getColumnName(i + 1);
+                    if ( columnName.contains("Create_Date") || columnName.contains("Created_By")
+                            || columnName.contains("Last_Update") || columnName.contains("Last_Updated_By")){
+
+                        System.out.println("Skipping column "+ columnName);
+                    }
+                    else{
+                        homeTable.getColumns().add(column);
+                        // Set columns to resize based on content
+                        homeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+                    }
                 }
 
+                // populating rows with data
                 while(resultSet.next()){
                     ObservableList<String> row = FXCollections.observableArrayList();
                     for(int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++){

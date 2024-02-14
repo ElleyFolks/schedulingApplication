@@ -22,7 +22,10 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
 
-            PreparedStatement statement = ManageQuery.createSelectQuery("contacts");
+            // Set padding to create a border around the TableView
+            homeTable.setPadding(new javafx.geometry.Insets(20));
+
+            PreparedStatement statement = ManageQuery.createSelectQuery("customers");
             ResultSet results = ManageQuery.getQueryResults(statement);
             LoadTable.loadData(homeTable, results);
         } catch (SQLException e) {
