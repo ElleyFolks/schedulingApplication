@@ -6,38 +6,31 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeController">
    <children>
-      <VBox AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+      <VBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard View:">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <RadioButton fx:id="customerRadioBtn" alignment="CENTER_LEFT" mnemonicParsing="false" text="Customers">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </RadioButton>
-            <RadioButton alignment="CENTER_LEFT" mnemonicParsing="false" text="Appointments by week">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </RadioButton>
             <TabPane tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Untitled Tab 1">
+                <Tab text="Customers">
                   <content>
                     <AnchorPane>
                            <children>
-                              <VBox>
+                              <VBox spacing="5.0">
                                  <children>
+                                    <TableView fx:id="customersTable" />
                                     <ButtonBar>
                                        <buttons>
                                         <Button fx:id="homeAddBtn" mnemonicParsing="false" prefHeight="25.0" text="Add" />
@@ -45,16 +38,55 @@
                                           <Button fx:id="homeAddBtn2" mnemonicParsing="false" text="Remove" />
                                        </buttons>
                                     </ButtonBar>
-                                    <TableView fx:id="customersTable" />
                                  </children>
                               </VBox>
                            </children>
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Untitled Tab 2">
+                <Tab text="Appointments">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0">
+                           <children>
+                              <VBox spacing="5.0">
+                                 <children>
+                                    <TableView fx:id="appointmentsTable" />
+                                    <HBox>
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <RadioButton alignment="CENTER_LEFT" mnemonicParsing="false" text="Current week">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="selectAppointmentRange" />
+                                                   </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton mnemonicParsing="false" text="Current month" toggleGroup="$selectAppointmentRange">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </RadioButton>
+                                                <RadioButton mnemonicParsing="false" text="All" toggleGroup="$selectAppointmentRange">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </RadioButton>
+                                             </children>
+                                          </VBox>
+                                          <ButtonBar>
+                                             <buttons>
+                                                <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#switchToAddAppointmentScene" prefHeight="25.0" text="Add" />
+                                                <Button fx:id="homeAddBtn11" mnemonicParsing="false" text="Modify" />
+                                                <Button fx:id="homeAddBtn21" mnemonicParsing="false" text="Remove" />
+                                             </buttons>
+                                          </ButtonBar>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children></AnchorPane>
                   </content>
                 </Tab>
               </tabs>
