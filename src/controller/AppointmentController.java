@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import model.Appointment;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -142,7 +143,6 @@ public class AppointmentController implements Initializable {
 
         // creating new row
         ResultSet resultSet = ManageQuery.createRowQuery("appointments", columnValuesList, appointmentsColNames);
-
     }
 
     private String formatTimeValue(int value){

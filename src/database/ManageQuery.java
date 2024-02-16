@@ -24,7 +24,15 @@ public class ManageQuery {
         return ManageQuery.getPreparedStatement();
     }
 
-    public static ResultSet createRowQuery(String tableName, List<String> columnValues, List<String> columnNames) throws SQLException{
+
+    /**
+     * A function that creates and executes a query to add a row to a table.
+     * @param tableName Name of table to add row to.
+     * @param columnValues Actual data that will be contained in row
+     * @param columnNames The names of the column (Appointment_ID,Type,...) in the table of the database.
+     * @return
+     */
+    public static ResultSet createRowQuery(String tableName, List<String> columnValues, List<String> columnNames){
 
         StringBuilder sqlString = new StringBuilder("INSERT INTO " + tableName + " (");
 
