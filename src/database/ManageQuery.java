@@ -1,6 +1,8 @@
 package database;
 
 import java.sql.*;
+import java.util.List;
+
 public class ManageQuery {
 
     private static PreparedStatement pStatement;
@@ -20,6 +22,52 @@ public class ManageQuery {
         ManageQuery.createPreparedStatement(JDBC.getConnection(),searchString);
 
         return ManageQuery.getPreparedStatement();
+    }
+
+    public static ResultSet createRowQuery(String tableName, List<String> columnValues, List<String> columnNames) throws SQLException{
+
+        StringBuilder sqlString = new StringBuilder("INSERT INTO " + tableName + " (");
+
+        // adds columns to query
+        for(int i = 1; i<= columnNames.size(); i++){
+            sqlString.append(columnNames.get(i-1));
+
+            if(i<columnNames.size()){
+                sqlString.append(", ");
+            }
+        }
+
+        // adds start of VALUES statement
+        sqlString.append(") VALUES (");
+
+        // adds placeholders for values
+        for(int i = 1; i<= columnNames.size(); i++){
+            sqlString.append("?");
+
+            if(i<columnNames.size()){
+                sqlString.append(", ");
+            }
+        }
+        sqlString.append(")");
+        System.out.println(sqlString.toString());
+
+        try {
+            // Creating prepared statement
+            ManageQuery.createPreparedStatement(JDBC.getConnection(), sqlString.toString());
+            PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();
+
+            // setting values of IN ? values
+            for(int i = 1; i<= columnNames.size(); i++){
+                preparedStatement.setObject(i, columnValues.get(i-1));
+            }
+
+            ResultSet resultSet = ManageQuery.getQueryResults(preparedStatement);
+            return resultSet;
+
+        }catch(Exception exception){
+            System.out.println("Database Error?! " + exception.getMessage());
+        }
+        return null;
     }
 
     public static PreparedStatement createSelectWQuery(String tableName, String start, String end) throws SQLException{

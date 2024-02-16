@@ -38,7 +38,7 @@ public class HomeController implements Initializable {
             ResultSet results = ManageQuery.getQueryResults(statement);
             LoadTable.loadData(customersTable, results);
 
-            customersTable.setPadding(new javafx.geometry.Insets(20));
+            appointmentsTable.setPadding(new javafx.geometry.Insets(20));
 
             PreparedStatement statement2 = ManageQuery.createSelectQuery("appointments");
             ResultSet results2 = ManageQuery.getQueryResults(statement2);

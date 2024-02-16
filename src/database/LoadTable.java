@@ -21,6 +21,9 @@ public class LoadTable{
 
         // creating columns dynamically
         if(resultSet != null){
+
+            homeTable.getItems().clear();
+
             try{
                 for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
                     final int index2 = i;
@@ -49,8 +52,9 @@ public class LoadTable{
                     }
                     loadedData.add(row);
                 }
-                // loading data
+                // loading table with data
                 homeTable.setItems(loadedData);
+                homeTable.refresh();
                 System.out.println("Successfully loaded data.");
 
             }catch (Exception exception){
@@ -59,6 +63,4 @@ public class LoadTable{
             }
         }
     }
-
-
 }
