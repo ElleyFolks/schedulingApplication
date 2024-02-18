@@ -1,6 +1,7 @@
 package controller;
 
 import database.ManageQuery;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import database.LoadTable;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import main.Main;
+import model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,25 +26,29 @@ public class HomeController implements Initializable {
     TableView<ObservableList<String>> customersTable = new TableView<>();
 
     @FXML
-    TableView<ObservableList<String>> appointmentsTable = new TableView<>();
+    TableView<Appointment> appointmentsTable = new TableView<>();
 
+    @FXML
+    ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
 
             // Set padding to create a border around the TableView
-            customersTable.setPadding(new javafx.geometry.Insets(20));
+            //customersTable.setPadding(new javafx.geometry.Insets(20));
 
-            PreparedStatement statement = ManageQuery.createSelectQuery("customers");
-            ResultSet results = ManageQuery.getQueryResults(statement);
-            LoadTable.loadData(customersTable, results);
+            //PreparedStatement statement = ManageQuery.createSelectQuery("customers");
+            //ResultSet results = ManageQuery.getQueryResults(statement);
+            //LoadTable.formatAppointmentTable(customersTable, results);
 
             appointmentsTable.setPadding(new javafx.geometry.Insets(20));
 
             PreparedStatement statement2 = ManageQuery.createSelectQuery("appointments");
             ResultSet results2 = ManageQuery.getQueryResults(statement2);
-            LoadTable.loadData(appointmentsTable, results2);
+            LoadTable.formatAppointmentTable(appointmentsTable);
+            ObservableList<Appointment> allAppointments = LoadTable.getAllAppointments(appointments, appointmentsTable);
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

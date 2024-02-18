@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ManageQuery {
@@ -16,7 +17,7 @@ public class ManageQuery {
     }
 
     public static PreparedStatement createSelectQuery(String tableName) throws SQLException{
-        String searchString = "SELECT * from " + tableName;
+        String searchString = "SELECT * from " + tableName + " AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID;";
 
         // Creating prepared statement
         ManageQuery.createPreparedStatement(JDBC.getConnection(),searchString);
@@ -32,7 +33,7 @@ public class ManageQuery {
      * @param columnNames The names of the column (Appointment_ID,Type,...) in the table of the database.
      * @return
      */
-    public static ResultSet createRowQuery(String tableName, List<String> columnValues, List<String> columnNames){
+    public static int createRowQuery(String tableName, List<String> columnValues, List<String> columnNames){
 
         StringBuilder sqlString = new StringBuilder("INSERT INTO " + tableName + " (");
 
@@ -66,16 +67,23 @@ public class ManageQuery {
 
             // setting values of IN ? values
             for(int i = 1; i<= columnNames.size(); i++){
-                preparedStatement.setObject(i, columnValues.get(i-1));
+                Object value = columnValues.get(i - 1);
+
+                if (value instanceof LocalDateTime) {
+                    preparedStatement.setTimestamp(i, Timestamp.valueOf((LocalDateTime) value));
+                } else {
+                    preparedStatement.setObject(i, value);
+                }
             }
 
-            ResultSet resultSet = ManageQuery.getQueryResults(preparedStatement);
-            return resultSet;
+            int rowsChanged = preparedStatement.executeUpdate();
+            return rowsChanged;
 
         }catch(Exception exception){
             System.out.println("Database Error?! " + exception.getMessage());
         }
-        return null;
+
+        return 0;
     }
 
     public static PreparedStatement createSelectWQuery(String tableName, String start, String end) throws SQLException{
@@ -102,4 +110,14 @@ public class ManageQuery {
         return resultSet;
     }
 
+
+    public static String getValueAtID(String columnName, String tableName, String id) throws SQLException {
+
+        ManageQuery.createPreparedStatement(JDBC.getConnection(), "SELECT "+ columnName +" FROM "+ tableName +" WHERE Contact_ID = " + id);
+        PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();
+        preparedStatement.execute();
+        ResultSet resultSet = preparedStatement.getResultSet();
+
+        return String.valueOf(resultSet);
+    }
 }

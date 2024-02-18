@@ -1,66 +1,95 @@
 package database;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.util.Callback;
+import model.Appointment;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadTable{
 
-    // connecting to database and loading data
-    public static void loadData(TableView<ObservableList<String>> homeTable, ResultSet resultSet)
-            throws SQLException {
-        ObservableList<ObservableList<String>> loadedData = FXCollections.observableArrayList();
+    public static void formatAppointmentTable(TableView<Appointment> tableView) {
 
-        // creating columns dynamically
-        if(resultSet != null){
+        // Get the list of all properties of the Appointment class using reflection
+        Class<Appointment> appointmentClass = Appointment.class;
+        Field[] fields = appointmentClass.getDeclaredFields();
 
-            homeTable.getItems().clear();
-
-            try{
-                for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
-                    final int index2 = i;
-
-                    // lambda expression
-                    TableColumn<ObservableList<String>, String> column = new TableColumn<>(
-                            resultSet.getMetaData().getColumnName(i + 1));
-                    column.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().get(index2)));
-
-                    String columnName = resultSet.getMetaData().getColumnName(i + 1);
-                    if ( columnName.contains("Create_Date") || columnName.contains("Created_By")
-                            || columnName.contains("Last_Update") || columnName.contains("Last_Updated_By")){
-
-                        System.out.println("Skipping column "+ columnName);
+        for (Field field : fields) {
+            // Exclude fields that should not be displayed in the TableView
+            if (!field.getName().equals("serialVersionUID")) {
+                // Create TableColumn dynamically
+                TableColumn<Appointment, Object> column = new TableColumn<>(field.getName());
+                column.setCellValueFactory(data -> {
+                    try {
+                        field.setAccessible(true);
+                        return new SimpleObjectProperty<>(field.get(data.getValue()));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        return new SimpleObjectProperty<>(null);
                     }
-                    else{
-                        homeTable.getColumns().add(column);
-                    }
-                }
-
-                // populating rows with data
-                while(resultSet.next()){
-                    ObservableList<String> row = FXCollections.observableArrayList();
-                    for(int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++){
-                        row.add(resultSet.getString(i));
-                    }
-                    loadedData.add(row);
-                }
-                // loading table with data
-                homeTable.setItems(loadedData);
-                homeTable.refresh();
-                System.out.println("Successfully loaded data.");
-
-            }catch (Exception exception){
-                exception.printStackTrace();
-                System.out.println("Could not populate data!");
+                });
+                tableView.getColumns().add(column);
             }
         }
+        System.out.println("Table view created.");
     }
+
+
+    public static ObservableList<Appointment> getAllAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView) {
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID;";
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
+             ResultSet results = statement.executeQuery()) {
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDate startDate = results.getDate("Start").toLocalDate();
+                        LocalDateTime startTime = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDate endDate = results.getDate("End").toLocalDate();
+                        LocalDateTime endTime = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startDate, startTime, endDate, endTime, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+
+                    tableView.setItems(appointments);
+                    tableView.refresh();
+
+
+                    System.out.println("Successfully populated table data!");
+                    return appointments;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("Failed to populate table data...");
+                }
+            }
+        } catch (SQLException e) {
+            // Log or throw a more specific exception
+            System.err.println("Error executing query: " + e.getMessage());
+        }
+        return null;
+    }
+
 }
