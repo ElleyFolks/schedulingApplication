@@ -1,7 +1,9 @@
 package controller;
 
-import database.JDBC;
 import database.ManageQuery;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import main.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,15 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import model.Appointment;
 
+import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class AppointmentController implements Initializable {
@@ -73,15 +70,8 @@ public class AppointmentController implements Initializable {
     @FXML
     private TextField contactId;
 
-    private List<String> appointmentsAndContactColNames = new ArrayList<String>();
-    private List<String> appointmentsColNames = new ArrayList<>();
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        setJoinAppointmentContactColNames(appointmentsAndContactColNames);
-        setAppointmentColNames(appointmentsColNames);
 
         // adds AM or PM options to time code combo box
         startTimeCode.getItems().add("AM");
@@ -112,33 +102,6 @@ public class AppointmentController implements Initializable {
         }
     }
 
-    void setJoinAppointmentContactColNames(List<String> list){
-        list.add("Title");
-        list.add("Description");
-        list.add("Location");
-        list.add("Type");
-        list.add("Start");
-        list.add("End");
-        list.add("Customer_ID");
-        list.add("User_ID");
-        list.add("Contact_ID");
-
-        // a part of custom inner join view, NOT originally a part of appointments.
-        list.add("Contact_Name");
-    }
-
-    void setAppointmentColNames(List<String> list){
-        list.add("Title");
-        list.add("Description");
-        list.add("Location");
-        list.add("Type");
-        list.add("Start");
-        list.add("End");
-        list.add("Customer_ID");
-        list.add("User_ID");
-        list.add("Contact_ID");
-    }
-
     @FXML
     void onSaveAction() throws SQLException {
         // TODO add try{}catch{} and validation logic
@@ -151,51 +114,44 @@ public class AppointmentController implements Initializable {
         Integer contactID = Integer.parseInt(contactId.getText());
 
         // string of date time in format of YYYY-MM-DD hh:hha
-        String startDateTimeStr = startDate.getValue()+" " + startHour.getValue() +":"+ startMinute.getValue() + startTimeCode.getValue();
-        String endDateTimeStr = endDate.getValue()+" " + endHour.getValue() +":"+ endMinute.getValue() + endTimeCode.getValue();
+        String startDateTimeStr = startDate.getValue()+" " + startHour.getValue() +":"+ startMinute.getValue()
+                + startTimeCode.getValue();
+        String endDateTimeStr = endDate.getValue()+" " + endHour.getValue() +":"+ endMinute.getValue()
+                + endTimeCode.getValue();
 
         // converting local time to UTC
-        String utcStartDateTime = convertLocalToUTC(startDateTimeStr);
-        String utcEndDateTime = convertLocalToUTC(endDateTimeStr);
-
-        // double-checking format
-        System.out.println("start date UTC time: " + utcStartDateTime);
-        System.out.println("end date UTC time: "+ utcEndDateTime);
-
-        //Appointment newAppointment = new Appointment(title,description,location,type,utcStartDateTime,utcEndDateTime,customerID,userID,contactID);
-        
-        // adding values to array list
-        List<String> columnValuesList = new ArrayList<String>();
-        columnValuesList.add(title);
-        columnValuesList.add(description);
-        columnValuesList.add(location);
-        columnValuesList.add(type);
-
-        columnValuesList.add(utcStartDateTime);
-        columnValuesList.add(utcEndDateTime);
-
-        columnValuesList.add(customerID.toString());
-        columnValuesList.add(userID.toString());
-        columnValuesList.add(contactID.toString());
+        String utcStartDateTime = helper.Time.changeLocalToUTC(startDateTimeStr);
+        String utcEndDateTime = helper.Time.changeLocalToUTC(endDateTimeStr);
 
         // creating new row and creates new appointment object with values
-        int rowsChanged = ManageQuery.createRowQuery("appointments", columnValuesList, appointmentsColNames);
-        System.out.println("Number of rows changed: "+rowsChanged);
+        boolean rowsChanged = ManageQuery.createRowQuery(title, description, location, type, utcStartDateTime,
+                utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID),String.valueOf(userID));
+
+        if(rowsChanged){
+            System.out.println("Successfully added new row");
+
+            // switching back to home
+            try{switchToHomeScene();} catch(Exception fxmlException){
+                System.out.println("FXML error: " + fxmlException.getMessage());
+            }
+        }
+        else{
+            // TODO add warning here
+            System.out.println("Adding row failed.");
+        }
     }
 
-    private static String convertLocalToUTC(String dateTime){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
-        LocalDateTime localDateTime = LocalDateTime.parse(dateTime,formatter);
+    @FXML
+    void switchToHomeScene() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Home.fxml"));
 
-        // Convert to UTC
-        LocalDateTime utcDateTime = localDateTime
-                .atZone(Main.userTimeZone)
-                .withZoneSameInstant(ZoneOffset.UTC)
-                .toLocalDateTime();
+        Scene scene = new Scene(fxmlLoader.load());
 
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //HH denotes 24-hr time
-
-        return utcDateTime.format(outputFormatter);
+        Stage stage = Main.getPrimaryStage();
+        stage.hide();
+        stage.setTitle("Home");
+        stage.setScene(scene);
+        stage.show();
     }
 }
 

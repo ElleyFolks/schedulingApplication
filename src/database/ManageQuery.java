@@ -1,5 +1,7 @@
 package database;
 
+import model.Appointment;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,71 +31,55 @@ public class ManageQuery {
     /**
      * A function that creates and executes a query to add a row to a table.
      * @param tableName Name of table to add row to.
-     * @param columnValues Actual data that will be contained in row
+     * @param appointment Actual data that will be contained in row
      * @param columnNames The names of the column (Appointment_ID,Type,...) in the table of the database.
      * @return
      */
-    public static int createRowQuery(String tableName, List<String> columnValues, List<String> columnNames){
+    public static boolean createRowQuery(String title, String description, String location, String type, String start,
+                                     String end, String contactID, String customerId, String userID){
 
-        StringBuilder sqlString = new StringBuilder("INSERT INTO " + tableName + " (");
 
-        // adds columns to query
-        for(int i = 1; i<= columnNames.size(); i++){
-            sqlString.append(columnNames.get(i-1));
-
-            if(i<columnNames.size()){
-                sqlString.append(", ");
-            }
-        }
-
-        // adds start of VALUES statement
-        sqlString.append(") VALUES (");
-
-        // adds placeholders for values
-        for(int i = 1; i<= columnNames.size(); i++){
-            sqlString.append("?");
-
-            if(i<columnNames.size()){
-                sqlString.append(", ");
-            }
-        }
-        sqlString.append(")");
-        System.out.println(sqlString.toString());
+        String sqlString = "INSERT INTO appointments(Title, Description, Location, Type, Start, " +
+                "End, Customer_ID, Contact_ID, User_ID) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             // Creating prepared statement
-            ManageQuery.createPreparedStatement(JDBC.getConnection(), sqlString.toString());
+            ManageQuery.createPreparedStatement(JDBC.getConnection(), sqlString);
             PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();
 
-            // setting values of IN ? values
-            for(int i = 1; i<= columnNames.size(); i++){
-                Object value = columnValues.get(i - 1);
+            // setting IN parameters
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, description);
+            preparedStatement.setString(3, location);
+            preparedStatement.setString(4, type);
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(start));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(end));
+            preparedStatement.setInt(7, Integer.parseInt(customerId));
+            preparedStatement.setInt(8, Integer.parseInt(contactID));
+            preparedStatement.setInt(9, Integer.parseInt(userID));
 
-                if (value instanceof LocalDateTime) {
-                    preparedStatement.setTimestamp(i, Timestamp.valueOf((LocalDateTime) value));
-                } else {
-                    preparedStatement.setObject(i, value);
+            try {
+                //executing prepared statement, returns number of rows affected
+                int rowsChanged = preparedStatement.executeUpdate();
+
+                if(rowsChanged > 0){
+                    System.out.println("Number of rows affected: "+rowsChanged);
+                }else{
+                    System.out.println("No rows affected");
                 }
-            }
 
-            int rowsChanged = preparedStatement.executeUpdate();
-            return rowsChanged;
+                return true;
+
+            }catch(Exception executeException){
+                System.out.println("Error: " + executeException.getMessage());
+
+            }
 
         }catch(Exception exception){
             System.out.println("Database Error?! " + exception.getMessage());
         }
-
-        return 0;
-    }
-
-    public static PreparedStatement createSelectWQuery(String tableName, String start, String end) throws SQLException{
-        //TODO test this
-        String searchString = "SELECT * from " + tableName + "WHERE start=? to start=?";
-
-        // Creating prepared statement
-        ManageQuery.createPreparedStatement(JDBC.getConnection(),searchString);
-
-        return ManageQuery.getPreparedStatement();
+        return false;
     }
 
     public static ResultSet getQueryResults(PreparedStatement preparedStatement) throws SQLException{

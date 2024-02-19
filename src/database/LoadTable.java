@@ -59,9 +59,7 @@ public class LoadTable{
                         String description = results.getString("Description");
                         String location = results.getString("Location");
                         String type = results.getString("Type");
-                        LocalDate startDate = results.getDate("Start").toLocalDate();
                         LocalDateTime startTime = results.getTimestamp("Start").toLocalDateTime();
-                        LocalDate endDate = results.getDate("End").toLocalDate();
                         LocalDateTime endTime = results.getTimestamp("End").toLocalDateTime();
                         int customerId = results.getInt("Customer_ID");
                         int userId = results.getInt("User_ID");
@@ -69,7 +67,7 @@ public class LoadTable{
                         String contactName = results.getString("Contact_Name");
 
                         Appointment appointment = new Appointment(appointmentId, title, description, location, type,
-                                startDate, startTime, endDate, endTime, customerId, userId, contactId, contactName);
+                                startTime, endTime, customerId, userId, contactId, contactName);
 
                         appointments.add(appointment);
                     }

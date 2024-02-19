@@ -5,48 +5,46 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * This class represents an Appointment object and provides methods to get/set its properties.
  */
 public class Appointment {
-    private int appointmentId;
+    private int appointmentId = 0;
     private String appointmentTitle;
     private String appointmentDescription;
     private String appointmentLocation;
     private String appointmentType;
-    private LocalDate appointmentStartDate;
-    private LocalDateTime appointmentStartTime;
-    private LocalDate appointmentEndDate;
-    private LocalDateTime appointmentEndTime;
+
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
     private int customerId;
     private int userId;
     private int contactId;
     private String contactFullName;
 
-    public Appointment(int appointmentId,
-                       String appointmentTitle,
-                       String appointmentDescription,
-                       String appointmentLocation,
-                       String appointmentType,
-                       LocalDate appointmentStartDate,
-                       LocalDateTime appointmentStartTime,
-                       LocalDate appointmentEndDate,
-                       LocalDateTime appointmentEndTime,
-                       int customerId,
-                       int userId,
-                       int contactId,
-                       String contactFullName
+    public Appointment(
+            int appointmentId,
+            String appointmentTitle,
+            String appointmentDescription,
+            String appointmentLocation,
+            String appointmentType,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            int customerId,
+            int userId,
+            int contactId,
+            String contactFullName
     ) {
         this.appointmentId = appointmentId;
         this.appointmentTitle = appointmentTitle;
         this.appointmentDescription = appointmentDescription;
         this.appointmentLocation = appointmentLocation;
         this.appointmentType = appointmentType;
-        this.appointmentStartDate = appointmentStartDate;
-        this.appointmentStartTime = appointmentStartTime;
-        this.appointmentEndDate = appointmentEndDate;
-        this.appointmentEndTime = appointmentEndTime;
+        this.startDateTime = startTime;
+        this.endDateTime = endTime;
         this.customerId = customerId;
         this.userId = userId;
         this.contactId = contactId;
@@ -93,36 +91,20 @@ public class Appointment {
         this.appointmentType = appointmentType;
     }
 
-    public LocalDate getAppointmentStartDate() {
-        return appointmentStartDate;
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
     }
 
-    public void setAppointmentStartDate(LocalDate appointmentStartDate) {
-        this.appointmentStartDate = appointmentStartDate;
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
-    public LocalDateTime getAppointmentStartTime() {
-        return appointmentStartTime;
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
     }
 
-    public void setAppointmentStartTime(LocalDateTime appointmentStartTime) {
-        this.appointmentStartTime = appointmentStartTime;
-    }
-
-    public LocalDate getAppointmentEndDate() {
-        return appointmentEndDate;
-    }
-
-    public void setAppointmentEndDate(LocalDate appointmentEndDate) {
-        this.appointmentEndDate = appointmentEndDate;
-    }
-
-    public LocalDateTime getAppointmentEndTime() {
-        return appointmentEndTime;
-    }
-
-    public void setAppointmentEndTime(LocalDateTime appointmentEndTime) {
-        this.appointmentEndTime = appointmentEndTime;
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
     }
 
     public int getCustomerId() {
