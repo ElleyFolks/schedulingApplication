@@ -1,5 +1,8 @@
 package database;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import model.Appointment;
 
 import java.sql.*;
@@ -18,23 +21,6 @@ public class ManageQuery {
         return pStatement;
     }
 
-    public static PreparedStatement createSelectQuery(String tableName) throws SQLException{
-        String searchString = "SELECT * from " + tableName + " AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID;";
-
-        // Creating prepared statement
-        ManageQuery.createPreparedStatement(JDBC.getConnection(),searchString);
-
-        return ManageQuery.getPreparedStatement();
-    }
-
-
-    /**
-     * A function that creates and executes a query to add a row to a table.
-     * @param tableName Name of table to add row to.
-     * @param appointment Actual data that will be contained in row
-     * @param columnNames The names of the column (Appointment_ID,Type,...) in the table of the database.
-     * @return
-     */
     public static boolean createRowQuery(String title, String description, String location, String type, String start,
                                      String end, String contactID, String customerId, String userID){
 
@@ -75,35 +61,34 @@ public class ManageQuery {
                 System.out.println("Error: " + executeException.getMessage());
 
             }
-
         }catch(Exception exception){
             System.out.println("Database Error?! " + exception.getMessage());
         }
         return false;
     }
 
-    public static ResultSet getQueryResults(PreparedStatement preparedStatement) throws SQLException{
-        ResultSet resultSet = null;
+    /**
+     * Used to set values for a combo box of a menu based on a column from a database table.
+     * @param comboBox The specific fxml object that will have options populated.
+     * @param sqlQuery A query that selects a column from a table.
+     */
+    public static void setComboBoxOptions(ComboBox<String> comboBox, String sqlQuery){
+        ObservableList<String> boxItems = FXCollections.observableArrayList();
 
-        // Attempting to execute prepared statement
         try{
-            preparedStatement.execute();
-            resultSet = preparedStatement.getResultSet();
+            createPreparedStatement(JDBC.getConnection(),sqlQuery);
+            ResultSet resultSet = getPreparedStatement().executeQuery();
 
-        } catch(Exception exception){
-            System.out.println("Database Error " + exception.getMessage());
+            while(resultSet.next()){
+                String resultValue = resultSet.getString(1);
+                boxItems.add(resultValue);
+            }
+
+            // settings items to be drop down options in combo box
+            comboBox.setItems(boxItems);
+
+        }catch(SQLException sqlException) {
+            System.err.println("Could not execute query. " + sqlException.getMessage());
         }
-        return resultSet;
-    }
-
-
-    public static String getValueAtID(String columnName, String tableName, String id) throws SQLException {
-
-        ManageQuery.createPreparedStatement(JDBC.getConnection(), "SELECT "+ columnName +" FROM "+ tableName +" WHERE Contact_ID = " + id);
-        PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();
-        preparedStatement.execute();
-        ResultSet resultSet = preparedStatement.getResultSet();
-
-        return String.valueOf(resultSet);
     }
 }

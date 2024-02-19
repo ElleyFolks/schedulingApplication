@@ -9,8 +9,6 @@ public class LoginQuery {
     public static boolean checkUserCredentials(String username, String password) throws SQLException {
         String searchString = "SELECT * FROM users WHERE User_Name=? AND Password=?";
 
-        ManageQuery.createPreparedStatement(JDBC.getConnection(), searchString);
-
         // Creating prepared statement
         ManageQuery.createPreparedStatement(JDBC.getConnection(),searchString);
         PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();

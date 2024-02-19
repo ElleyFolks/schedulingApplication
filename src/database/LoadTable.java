@@ -75,17 +75,16 @@ public class LoadTable{
                     tableView.setItems(appointments);
                     tableView.refresh();
 
-
-                    System.out.println("Successfully populated table data!");
+                    System.out.println("Successfully added data!");
                     return appointments;
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    System.out.println("Failed to populate table data...");
+                    System.out.println("Failed to add table data...");
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException sqlException) {
             // Log or throw a more specific exception
-            System.err.println("Error executing query: " + e.getMessage());
+            System.err.println("Error executing query: " + sqlException.getMessage());
         }
         return null;
     }

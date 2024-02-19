@@ -1,8 +1,10 @@
 package controller;
 
 import database.ManageQuery;
+import helper.Validation;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import main.Main;
 import javafx.fxml.FXML;
@@ -62,13 +64,13 @@ public class AppointmentController implements Initializable {
     private TextField appointmentType;
 
     @FXML
-    private TextField customerId;
+    private ComboBox<String> customerId;
 
     @FXML
-    private TextField userId;
+    private ComboBox<String> userId;
 
     @FXML
-    private TextField contactId;
+    private ComboBox<String> contactId;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -100,44 +102,91 @@ public class AppointmentController implements Initializable {
                 endMinute.getItems().add(String.valueOf(i));
             }
         }
+
+        // adding combo box options for customer ID
+        ManageQuery.setComboBoxOptions(customerId, "SELECT Customer_ID FROM customers ORDER BY Customer_ID");
+
+        // adding combo box options for user ID
+        ManageQuery.setComboBoxOptions(userId,"SELECT User_ID FROM users ORDER BY User_ID");
+
+        // adding combo box options for contact ID
+        ManageQuery.setComboBoxOptions(contactId, "SELECT Contact_ID FROM contacts ORDER BY Contact_ID");
     }
 
     @FXML
-    void onSaveAction() throws SQLException {
-        // TODO add try{}catch{} and validation logic
-        String title = appointmentTitle.getText();
-        String description = appointmentDescription.getText();
-        String location = appointmentLocation.getText();
-        String type = appointmentType.getText();
-        Integer customerID = Integer.parseInt(customerId.getText());
-        Integer userID = Integer.parseInt(userId.getText());
-        Integer contactID = Integer.parseInt(contactId.getText());
+    void onSaveAction(){
+        if(isValidAppointment()) {
+            try {
+                String title = appointmentTitle.getText();
+                String description = appointmentDescription.getText();
+                String location = appointmentLocation.getText();
+                String type = appointmentType.getText();
 
-        // string of date time in format of YYYY-MM-DD hh:hha
-        String startDateTimeStr = startDate.getValue()+" " + startHour.getValue() +":"+ startMinute.getValue()
-                + startTimeCode.getValue();
-        String endDateTimeStr = endDate.getValue()+" " + endHour.getValue() +":"+ endMinute.getValue()
-                + endTimeCode.getValue();
+                Integer customerID = Integer.parseInt(String.valueOf(customerId.getValue()));
+                Integer userID = Integer.parseInt(String.valueOf(userId.getValue()));
+                Integer contactID = Integer.parseInt(String.valueOf(contactId.getValue()));
 
-        // converting local time to UTC
-        String utcStartDateTime = helper.Time.changeLocalToUTC(startDateTimeStr);
-        String utcEndDateTime = helper.Time.changeLocalToUTC(endDateTimeStr);
 
-        // creating new row and creates new appointment object with values
-        boolean rowsChanged = ManageQuery.createRowQuery(title, description, location, type, utcStartDateTime,
-                utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID),String.valueOf(userID));
+                // TODO need to validate date range - start cannot be after end
+                // string of date time in format of YYYY-MM-DD hh:hha
+                String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
+                        + startTimeCode.getValue();
+                String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
+                        + endTimeCode.getValue();
 
-        if(rowsChanged){
-            System.out.println("Successfully added new row");
+                // converting local time to UTC
+                String utcStartDateTime = helper.Time.changeLocalToUTC(startDateTimeStr);
+                String utcEndDateTime = helper.Time.changeLocalToUTC(endDateTimeStr);
 
-            // switching back to home
-            try{switchToHomeScene();} catch(Exception fxmlException){
-                System.out.println("FXML error: " + fxmlException.getMessage());
+                // creating new row and creates new appointment object with values
+                boolean rowsChanged = ManageQuery.createRowQuery(title, description, location, type, utcStartDateTime,
+                        utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID), String.valueOf(userID));
+
+                if (rowsChanged) {
+                    System.out.println("Successfully added new row");
+
+                    // switching back to home
+                    try {
+                        switchToHomeScene();
+                    } catch (Exception fxmlException) {
+                        System.out.println("FXML error: " + fxmlException.getMessage());
+                    }
+                } else {
+                    // TODO add warning here
+                    System.out.println("Adding row failed.");
+                }
+            } catch (Exception e) {
+                System.out.println("Saving error: " + e.getMessage());
             }
         }
-        else{
-            // TODO add warning here
-            System.out.println("Adding row failed.");
+    }
+
+    boolean isValidAppointment(){
+        if (Validation.isEmptyString(appointmentTitle, "Title")){
+            return false;
+        }
+
+        if (Validation.isEmptyString(appointmentDescription, "Description")){
+            return false;
+        }
+
+        if (Validation.isEmptyString(appointmentLocation, "Location")){
+            return false;
+        }
+
+        if (Validation.isEmptyString(appointmentType, "Type")){
+            return false;
+        }
+
+        // add validation for dates here
+
+        // add validation for
+
+
+
+
+        else {
+            return true;
         }
     }
 

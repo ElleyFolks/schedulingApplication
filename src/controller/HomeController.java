@@ -43,14 +43,10 @@ public class HomeController implements Initializable {
             //LoadTable.formatAppointmentTable(customersTable, results);
 
             appointmentsTable.setPadding(new javafx.geometry.Insets(20));
-
-            PreparedStatement statement2 = ManageQuery.createSelectQuery("appointments");
-            ResultSet results2 = ManageQuery.getQueryResults(statement2);
             LoadTable.formatAppointmentTable(appointmentsTable);
             ObservableList<Appointment> allAppointments = LoadTable.getAllAppointments(appointments, appointmentsTable);
 
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
