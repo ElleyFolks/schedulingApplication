@@ -126,7 +126,6 @@ public class AppointmentController implements Initializable {
                 Integer userID = Integer.parseInt(String.valueOf(userId.getValue()));
                 Integer contactID = Integer.parseInt(String.valueOf(contactId.getValue()));
 
-
                 // TODO need to validate date range - start cannot be after end
                 // string of date time in format of YYYY-MM-DD hh:hha
                 String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
@@ -162,28 +161,63 @@ public class AppointmentController implements Initializable {
     }
 
     boolean isValidAppointment(){
+        // validation for text fields
         if (Validation.isEmptyString(appointmentTitle, "Title")){
             return false;
         }
-
         if (Validation.isEmptyString(appointmentDescription, "Description")){
             return false;
         }
-
         if (Validation.isEmptyString(appointmentLocation, "Location")){
             return false;
         }
-
         if (Validation.isEmptyString(appointmentType, "Type")){
             return false;
         }
 
-        // add validation for dates here
+        // validation for time
+        if(Validation.isEmptyComboBox(startHour, "Start time hour (hh of hh:mm)")){
+            return false;
+        }
+        if(Validation.isEmptyComboBox(startMinute, "Start time minute (mm of hh:mm)")){
+            return false;
+        }
+        if(Validation.isEmptyComboBox(startTimeCode, "Start time code (AM or PM)")){
+            return false;
+        }
 
-        // add validation for
+        if(Validation.isEmptyComboBox(endHour, "End time hour (hh of hh:mm)")){
+            return false;
+        }
+        if(Validation.isEmptyComboBox(endMinute, "End time minutes (mm of hh:mm)")){
+            return false;
+        }
+        if(Validation.isEmptyComboBox(endTimeCode, "End Timecode (AM or PM)")){
+            return false;
+        }
 
+        // TODO add validation for time ranges. Look up business hours in EST.
 
+        // validation for dates
+        if(Validation.isEmptyDatePicker(startDate, "Start Date")){
+            return false;
+        }
+        if(Validation.isEmptyDatePicker(endDate, "End Date")){
+            return false;
+        }
 
+        // TODO add validation for date ranges.
+
+        // validation for ID's in combo boxes
+        if(Validation.isEmptyComboBox(customerId, "Customer ID")){
+            return false;
+        }
+        if(Validation.isEmptyComboBox(userId, "User ID")){
+            return false;
+        }
+        if(Validation.isEmptyComboBox(contactId, "Contact ID")){
+            return false;
+        }
 
         else {
             return true;

@@ -1,5 +1,7 @@
 package helper;
 
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 public class Validation {
@@ -23,4 +25,25 @@ public class Validation {
             return false;
         }
     }
+
+    public static boolean isEmptyComboBox(ComboBox<String> stringComboBox, String textFieldName){
+        if(stringComboBox.getSelectionModel().isEmpty()){
+            Alerts.showErrorAlert("comboBoxNotSelected", textFieldName);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static boolean isEmptyDatePicker(DatePicker datePicker, String textFieldName){
+        if(datePicker.getValue() == null){
+            Alerts.showErrorAlert("datePickerNotSelected", textFieldName);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }
