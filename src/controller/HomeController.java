@@ -116,7 +116,6 @@ public class HomeController implements Initializable {
                 }
             }
         }
-
     }
 
     @FXML

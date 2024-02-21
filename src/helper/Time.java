@@ -22,4 +22,17 @@ public class Time {
 
         return utcDateTime.format(outputFormatter);
     }
+
+    public static LocalDateTime localToUtcDateTime(String dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime,formatter);
+
+        // Convert to UTC
+        LocalDateTime utcDateTime = localDateTime
+                .atZone(Main.userTimeZone)
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalDateTime();
+
+        return utcDateTime;
+    }
 }

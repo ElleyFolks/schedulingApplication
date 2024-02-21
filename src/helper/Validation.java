@@ -49,7 +49,7 @@ public class Validation {
     }
 
     public static boolean isInvalidTimeCombination(LocalDateTime start, LocalDateTime end, String textFieldName){
-        if(end.isBefore(start)){
+        if(end.isBefore(start) || start.equals(end)){
             Alerts.showErrorAlert("invalidTimeCombination", textFieldName);
             return true;
         }

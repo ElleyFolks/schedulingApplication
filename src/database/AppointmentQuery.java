@@ -43,7 +43,7 @@ public class AppointmentQuery {
 
 
     public static ObservableList<Appointment> getAllAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView) {
-        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID;";
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID ORDER BY a.Appointment_ID;";
 
         try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
              ResultSet results = statement.executeQuery()) {
@@ -85,12 +85,12 @@ public class AppointmentQuery {
         return null;
     }
 
+
     public static ObservableList<Appointment> getRangeAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView, String interval) {
         // TODO figure out if this needs to be converted?
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:00");
         String currentDate = LocalDateTime.now().format(formatter);
         String selectedRange = null;
-
 
         switch(interval) {
             case "week":
@@ -105,13 +105,13 @@ public class AppointmentQuery {
         }
 
         String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
-                "WHERE a.Start >= ? AND a.Start < ? ;";
+                "WHERE a.Start >= ? AND a.Start < ? ORDER BY a.Appointment_ID;";
 
              try{
                  PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
                  statement.setObject(1,currentDate);
                  statement.setObject(2,selectedRange);
-                 System.out.println(statement);
+                 //System.out.println(statement);
 
                  ResultSet results = statement.executeQuery();
 

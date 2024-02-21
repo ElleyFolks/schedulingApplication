@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class AppointmentController implements Initializable {
@@ -189,6 +191,20 @@ public class AppointmentController implements Initializable {
             return false;
         }
         if(Validation.isEmptyComboBox(endTimeCode, "End Timecode (AM or PM)")){
+            return false;
+        }
+
+        String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
+                + startTimeCode.getValue();
+        String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
+                + endTimeCode.getValue();
+
+
+
+        LocalDateTime utcStartDateTime = helper.Time.localToUtcDateTime(startDateTimeStr);
+        LocalDateTime utcEndDateTime = helper.Time.localToUtcDateTime(endDateTimeStr);
+
+        if(Validation.isInvalidTimeCombination(utcStartDateTime,utcEndDateTime,"Start time or End time")){
             return false;
         }
 
