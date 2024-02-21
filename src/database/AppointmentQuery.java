@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -43,9 +44,9 @@ public class AppointmentQuery {
 
 
     public static ObservableList<Appointment> getAllAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView) {
-        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID ORDER BY a.Appointment_ID;";
+        String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID ORDER BY a.Appointment_ID;";
 
-        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(sqlQuery);
              ResultSet results = statement.executeQuery()) {
             if (results != null) {
                 try {
@@ -104,11 +105,11 @@ public class AppointmentQuery {
                 break;
         }
 
-        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
+        String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
                 "WHERE a.Start >= ? AND a.Start < ? ORDER BY a.Appointment_ID;";
 
              try{
-                 PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
+                 PreparedStatement statement = JDBC.getConnection().prepareStatement(sqlQuery);
                  statement.setObject(1,currentDate);
                  statement.setObject(2,selectedRange);
                  //System.out.println(statement);
@@ -153,11 +154,49 @@ public class AppointmentQuery {
         return null;
     }
 
-    public static boolean removeAppointment(int columnId){
-        String query = "DELETE from appointments WHERE Appointment_Id=?";
+    public static boolean modifyAppointment(String appointmentId, String title, String description, String location,
+                                            String type, String startTime, String endTime, String customerId,
+                                            String userId, String contactId) {
+        String sqlQuery = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, " +
+                "Start=?, End=?, Customer_ID=?, Contact_ID=?, User_ID=? WHERE Appointment_ID = ?;";
 
         try {
-            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(query);
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery);
+
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, description);
+            preparedStatement.setString(3, location);
+            preparedStatement.setString(4, type);
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(startTime));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(endTime));
+            preparedStatement.setInt(7, Integer.parseInt(customerId));
+            preparedStatement.setInt(8, Integer.parseInt(contactId));
+            preparedStatement.setInt(9, Integer.parseInt(userId));
+            preparedStatement.setInt(10, Integer.parseInt(appointmentId));
+
+            try {
+                Integer numberRowsChanged = preparedStatement.executeUpdate();
+                if (numberRowsChanged != null && preparedStatement.getUpdateCount() > 0) {
+                    System.out.println("Number rows changed: " + preparedStatement.getUpdateCount());
+                } else {
+                    System.out.println("No rows changed.");
+                }
+                return true;
+            } catch (Exception e) {
+                System.out.println("Could not delete row! " + e.getMessage());
+                return false;
+            }
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    public static boolean removeAppointment(int columnId){
+        String sqlQuery = "DELETE from appointments WHERE Appointment_Id=?";
+
+        try {
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery);
             preparedStatement.setObject(1, columnId);
             try {
                 Integer numberRowsChanged = preparedStatement.executeUpdate();

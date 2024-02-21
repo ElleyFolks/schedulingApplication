@@ -35,4 +35,16 @@ public class Time {
 
         return utcDateTime;
     }
+
+    public static LocalDateTime militaryToLocalTime(String dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime parsedInput = LocalDateTime.parse(dateTime,formatter);
+
+        // Convert to local with AM or PM
+        LocalDateTime localDateTime = parsedInput.atZone(Main.userTimeZone)
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalDateTime();
+
+        return localDateTime;
+    }
 }

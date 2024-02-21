@@ -8,6 +8,7 @@ import database.AppointmentQuery;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
@@ -36,6 +37,14 @@ public class HomeController implements Initializable {
 
     @FXML
     private RadioButton weekRadioButton;
+
+    @FXML
+    private Button addAppointmentBtn;
+
+    @FXML
+    private Button modifyAppointmentBtn;
+
+    public static Appointment appointmentToModify;
 
     @FXML
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -92,6 +101,36 @@ public class HomeController implements Initializable {
     }
 
     @FXML
+    public static Appointment getAppointmentToMod(){return appointmentToModify;}
+
+    @FXML
+    void onAddAppointmentAction(){
+        appointmentToModify = null;
+        try{
+            switchToAppointmentScene();
+
+        } catch(Exception fxmlException){
+            System.out.println("Error loading appointment screen: "+fxmlException.getMessage());
+        }
+    }
+
+    @FXML
+    void onModifyAppointmentAction(){
+        // gets appointment selected by user (if any)
+        appointmentToModify = appointmentsTable.getSelectionModel().getSelectedItem();
+
+        // notifies user no appointment was selected to modify
+        if(appointmentToModify == null){
+            Alerts.showErrorAlert("noAppointmentSelected", "appointment");
+        }else{
+            try{switchToAppointmentScene();
+            }catch(Exception fxmlException){
+                System.out.println("Could not load appointment screen"+fxmlException.getMessage());
+            }
+        }
+    }
+
+    @FXML
     void onRemoveAction(){
         Appointment selectedAppointment = appointmentsTable.getSelectionModel().getSelectedItem();
 
@@ -119,7 +158,7 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    void switchToAddAppointmentScene() throws IOException {
+    void switchToAppointmentScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/AppointmentMenu.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());

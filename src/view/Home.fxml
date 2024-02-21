@@ -77,8 +77,8 @@
                                           </VBox>
                                           <ButtonBar>
                                              <buttons>
-                                                <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#switchToAddAppointmentScene" prefHeight="25.0" text="Add" />
-                                                <Button fx:id="modifyAppointmentBtn" mnemonicParsing="false" text="Modify" />
+                                                <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#onAddAppointmentAction" prefHeight="25.0" text="Add" />
+                                                <Button fx:id="modifyAppointmentBtn" mnemonicParsing="false" onAction="#onModifyAppointmentAction" text="Modify" />
                                                 <Button fx:id="removeAppointmentBtn" mnemonicParsing="false" onAction="#onRemoveAction" text="Remove" />
                                              </buttons>
                                           </ButtonBar>

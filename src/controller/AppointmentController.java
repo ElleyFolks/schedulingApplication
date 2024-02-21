@@ -1,5 +1,6 @@
 package controller;
 
+import database.AppointmentQuery;
 import database.HelperQuery;
 import helper.Alerts;
 import helper.Validation;
@@ -10,10 +11,12 @@ import javafx.stage.Stage;
 import main.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -70,9 +73,42 @@ public class AppointmentController implements Initializable {
     @FXML
     private ComboBox<String> contactId;
 
+    Appointment appointmentSelected = null;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        initializeComboBoxes();
+        appointmentSelected = HomeController.getAppointmentToMod();
+
+        // will load in values of appointment is selected
+        if (appointmentSelected != null) {
+
+            appointmentTitle.setText(appointmentSelected.getAppointmentTitle());
+            appointmentDescription.setText(appointmentSelected.getAppointmentDescription());
+            appointmentLocation.setText(appointmentSelected.getAppointmentLocation());
+            appointmentType.setText(appointmentSelected.getAppointmentType());
+
+            LocalDateTime startDateTime = appointmentSelected.getStartDateTime();
+            startHour.setValue(startDateTime.format(DateTimeFormatter.ofPattern("hh")));
+            startMinute.setValue(startDateTime.format(DateTimeFormatter.ofPattern("mm")));
+            startTimeCode.setValue(startDateTime.format(DateTimeFormatter.ofPattern("a")));
+
+            LocalDateTime endDateTime = appointmentSelected.getEndDateTime();
+            endHour.setValue(endDateTime.format(DateTimeFormatter.ofPattern("hh")));
+            endMinute.setValue(endDateTime.format(DateTimeFormatter.ofPattern("mm")));
+            endTimeCode.setValue(endDateTime.format(DateTimeFormatter.ofPattern("a")));
+
+            startDate.setValue(appointmentSelected.getStartDateTime().toLocalDate());
+            endDate.setValue(appointmentSelected.getEndDateTime().toLocalDate());
+
+            customerId.setValue(String.valueOf(appointmentSelected.getCustomerId()));
+            userId.setValue(String.valueOf(appointmentSelected.getUserId()));
+            contactId.setValue(String.valueOf(appointmentSelected.getContactId()));
+        }
+    }
+
+    void initializeComboBoxes(){
         // adds AM or PM options to time code combo box
         startTimeCode.getItems().add("AM");
         startTimeCode.getItems().add("PM");
@@ -90,6 +126,7 @@ public class AppointmentController implements Initializable {
                 endHour.getItems().add(String.valueOf(i));
             }
         }
+
         // Combo box options for every 5 minutes
         for (int i = 0; i <= 59; i+=5) {
             if(i<10){
@@ -124,7 +161,6 @@ public class AppointmentController implements Initializable {
                 Integer userID = Integer.parseInt(String.valueOf(userId.getValue()));
                 Integer contactID = Integer.parseInt(String.valueOf(contactId.getValue()));
 
-                // TODO need to validate date range - start cannot be after end
                 // string of date time in format of YYYY-MM-DD hh:hha
                 String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
                         + startTimeCode.getValue();
@@ -135,24 +171,47 @@ public class AppointmentController implements Initializable {
                 String utcStartDateTime = helper.Time.changeLocalToUTC(startDateTimeStr);
                 String utcEndDateTime = helper.Time.changeLocalToUTC(endDateTimeStr);
 
-                // creating new row and creates new appointment object with values
-                boolean rowsChanged = HelperQuery.createRowQuery(title, description, location, type, utcStartDateTime,
-                        utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID), String.valueOf(userID));
+                // adds new appointment if none selected
+                if (appointmentSelected == null) {
 
-                if (rowsChanged) {
-                    System.out.println("Successfully added new row");
+                    // creating new row and creates new appointment object with values
+                    boolean rowsChanged = HelperQuery.createRowQuery(title, description, location, type, utcStartDateTime,
+                            utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID), String.valueOf(userID));
 
-                    // switching back to home
-                    try {
-                        switchToHomeScene();
-                    } catch (Exception fxmlException) {
-                        System.out.println("FXML error: " + fxmlException.getMessage());
+                    if (rowsChanged) {
+                        System.out.println("Successfully added new row");
+
+                        // switching back to home
+                        try {
+                            switchToHomeScene();
+                        } catch (Exception fxmlException) {
+                            System.out.println("FXML error: " + fxmlException.getMessage());
+                        }
+                    } else {
+                        System.out.println("Adding row failed.");
                     }
-                } else {
-                    // TODO add warning here
-                    System.out.println("Adding row failed.");
+
+                    //modifying selected appointment values
+                }else{
+
+                    boolean rowModified = AppointmentQuery.modifyAppointment(
+                            String.valueOf(appointmentSelected.getAppointmentId()),title, description, location, type,
+                            utcStartDateTime, utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID),
+                            String.valueOf(userID));
+                    if (rowModified) {
+                        System.out.println("Successfully modified row");
+
+                        // switching back to home
+                        try {
+                            switchToHomeScene();
+                        } catch (Exception fxmlException) {
+                            System.out.println("FXML error: " + fxmlException.getMessage());
+                        }
+                    } else {
+                        System.out.println("Modifying row failed.");
+                    }
                 }
-            } catch (Exception e) {
+            }catch(Exception e){
                 System.out.println("Saving error: " + e.getMessage());
             }
         }
@@ -198,8 +257,6 @@ public class AppointmentController implements Initializable {
                 + startTimeCode.getValue();
         String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
                 + endTimeCode.getValue();
-
-
 
         LocalDateTime utcStartDateTime = helper.Time.localToUtcDateTime(startDateTimeStr);
         LocalDateTime utcEndDateTime = helper.Time.localToUtcDateTime(endDateTimeStr);

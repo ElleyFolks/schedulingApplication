@@ -58,7 +58,14 @@ public class Alerts {
             case "noSelectedItem":
                 alert.setTitle("Selection error.");
                 alert.setHeaderText("Could not delete appointment.");
-                alert.setContentText("No "+textFieldName+" selected. Please select a(n) "+textFieldName);
+                alert.setContentText("No "+textFieldName+" selected. Please select a(n) "+textFieldName+" to continue.");
+                alert.showAndWait();
+                break;
+
+            case "noAppointmentSelected":
+                alert.setTitle("Selection error.");
+                alert.setHeaderText("Could not modify appointment.");
+                alert.setContentText("No "+textFieldName+" selected. Please select a(n) "+textFieldName+" to continue.");
                 alert.showAndWait();
                 break;
         }
