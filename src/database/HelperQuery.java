@@ -3,13 +3,10 @@ package database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import model.Appointment;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
-public class ManageQuery {
+public class HelperQuery {
 
     private static PreparedStatement pStatement;
 
@@ -31,8 +28,8 @@ public class ManageQuery {
 
         try {
             // Creating prepared statement
-            ManageQuery.createPreparedStatement(JDBC.getConnection(), sqlString);
-            PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();
+            HelperQuery.createPreparedStatement(JDBC.getConnection(), sqlString);
+            PreparedStatement preparedStatement = HelperQuery.getPreparedStatement();
 
             // setting IN parameters
             preparedStatement.setString(1, title);

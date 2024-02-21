@@ -120,7 +120,7 @@
             <ButtonBar prefHeight="40.0">
               <buttons>
                 <Button fx:id="appointmentSave" mnemonicParsing="false" onAction="#onSaveAction" text="Save" />
-                  <Button fx:id="appointmentCancel" mnemonicParsing="false" text="Cancel" />
+                  <Button fx:id="appointmentCancel" mnemonicParsing="false" onAction="#onCancelAction" text="Cancel" />
               </buttons>
             </ButtonBar>
          </children>

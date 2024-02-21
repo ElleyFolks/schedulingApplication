@@ -33,9 +33,9 @@
                                     <TableView fx:id="customersTable" />
                                     <ButtonBar>
                                        <buttons>
-                                        <Button fx:id="homeAddBtn" mnemonicParsing="false" prefHeight="25.0" text="Add" />
-                                          <Button fx:id="homeAddBtn1" mnemonicParsing="false" text="Modify" />
-                                          <Button fx:id="homeAddBtn2" mnemonicParsing="false" text="Remove" />
+                                        <Button fx:id="addCustomerBtn" mnemonicParsing="false" prefHeight="25.0" text="Add" />
+                                          <Button fx:id="modifyCustomerBtn" mnemonicParsing="false" text="Modify" />
+                                          <Button fx:id="removeCustomerBtn" mnemonicParsing="false" text="Remove" />
                                        </buttons>
                                     </ButtonBar>
                                  </children>
@@ -55,7 +55,7 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <RadioButton alignment="CENTER_LEFT" mnemonicParsing="false" text="Current week">
+                                                <RadioButton fx:id="weekRadioButton" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#populateAppointmentTable" text="Current week">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -63,12 +63,12 @@
                                                       <ToggleGroup fx:id="selectAppointmentRange" />
                                                    </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton mnemonicParsing="false" text="Current month" toggleGroup="$selectAppointmentRange">
+                                                <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#populateAppointmentTable" text="Current month" toggleGroup="$selectAppointmentRange">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
                                                 </RadioButton>
-                                                <RadioButton mnemonicParsing="false" text="All" toggleGroup="$selectAppointmentRange">
+                                                <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#populateAppointmentTable" text="All" toggleGroup="$selectAppointmentRange">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -78,8 +78,8 @@
                                           <ButtonBar>
                                              <buttons>
                                                 <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#switchToAddAppointmentScene" prefHeight="25.0" text="Add" />
-                                                <Button fx:id="homeAddBtn11" mnemonicParsing="false" text="Modify" />
-                                                <Button fx:id="homeAddBtn21" mnemonicParsing="false" text="Remove" />
+                                                <Button fx:id="modifyAppointmentBtn" mnemonicParsing="false" text="Modify" />
+                                                <Button fx:id="removeAppointmentBtn" mnemonicParsing="false" onAction="#onRemoveAction" text="Remove" />
                                              </buttons>
                                           </ButtonBar>
                                        </children>

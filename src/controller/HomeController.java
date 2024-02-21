@@ -1,13 +1,15 @@
 package controller;
 
-import database.ManageQuery;
+import helper.Alerts;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import database.LoadTable;
+import database.AppointmentQuery;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import main.Main;
@@ -15,9 +17,7 @@ import model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -27,6 +27,15 @@ public class HomeController implements Initializable {
 
     @FXML
     TableView<Appointment> appointmentsTable = new TableView<>();
+
+    @FXML
+    private RadioButton allRadioButton;
+
+    @FXML
+    private RadioButton monthRadioButton;
+
+    @FXML
+    private RadioButton weekRadioButton;
 
     @FXML
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -42,13 +51,72 @@ public class HomeController implements Initializable {
             //ResultSet results = ManageQuery.getQueryResults(statement);
             //LoadTable.formatAppointmentTable(customersTable, results);
 
+            // all appointments displayed by default
+            allRadioButton.setSelected(true);
+
             appointmentsTable.setPadding(new javafx.geometry.Insets(20));
-            LoadTable.formatAppointmentTable(appointmentsTable);
-            ObservableList<Appointment> allAppointments = LoadTable.getAllAppointments(appointments, appointmentsTable);
+            AppointmentQuery.formatAppointmentTable(appointmentsTable);
+            ObservableList<Appointment> allAppointments = AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
+
+            populateAppointmentTable();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    void populateAppointmentTable(){
+        try{
+            appointments.clear();
+
+            if(allRadioButton.isSelected()){
+
+                ObservableList<Appointment> allAppointments = AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
+                System.out.println("Displaying all appointments");
+            }
+            if(monthRadioButton.isSelected()){
+
+                ObservableList<Appointment> monthAppointments = AppointmentQuery.getRangeAppointments(appointments, appointmentsTable, "month");
+                System.out.println("Displaying appointments for month");
+            }
+            if(weekRadioButton.isSelected()){
+
+                ObservableList<Appointment> weekAppointments = AppointmentQuery.getRangeAppointments(appointments, appointmentsTable, "week");
+                System.out.println("Displaying appointments for week");
+            }
+
+        }catch(Exception e){
+            System.out.println("Error loading appointment table: "+ e.getMessage());
+        }
+    }
+
+    @FXML
+    void onRemoveAction(){
+        Appointment selectedAppointment = appointmentsTable.getSelectionModel().getSelectedItem();
+
+        // cannot delete item if nothing is selected
+        if(selectedAppointment == null){
+            Alerts.showErrorAlert("noSelectedItem", "appointment");
+        }
+        else{
+            Optional<ButtonType> result = Alerts.showConfirmAlert("deleteConfirm", "appointment");
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                boolean successfulDelete = AppointmentQuery.removeAppointment(selectedAppointment.getAppointmentId());
+
+                if(successfulDelete){
+                    System.out.println("Appointment successfully deleted");
+                    String deleteMessage = selectedAppointment.getAppointmentId() + " " +
+                            selectedAppointment.getAppointmentType();
+                    Alerts.showInfoAlert("successfulDelete", "appointment",deleteMessage);
+
+                    // updating table
+                    appointments.clear();
+                    populateAppointmentTable();
+                }
+            }
+        }
+
     }
 
     @FXML

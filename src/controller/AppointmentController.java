@@ -1,22 +1,18 @@
 package controller;
 
-import database.ManageQuery;
+import database.HelperQuery;
+import helper.Alerts;
 import helper.Validation;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.text.Text;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import main.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.*;
 
 public class AppointmentController implements Initializable {
@@ -104,13 +100,13 @@ public class AppointmentController implements Initializable {
         }
 
         // adding combo box options for customer ID
-        ManageQuery.setComboBoxOptions(customerId, "SELECT Customer_ID FROM customers ORDER BY Customer_ID");
+        HelperQuery.setComboBoxOptions(customerId, "SELECT Customer_ID FROM customers ORDER BY Customer_ID");
 
         // adding combo box options for user ID
-        ManageQuery.setComboBoxOptions(userId,"SELECT User_ID FROM users ORDER BY User_ID");
+        HelperQuery.setComboBoxOptions(userId,"SELECT User_ID FROM users ORDER BY User_ID");
 
         // adding combo box options for contact ID
-        ManageQuery.setComboBoxOptions(contactId, "SELECT Contact_ID FROM contacts ORDER BY Contact_ID");
+        HelperQuery.setComboBoxOptions(contactId, "SELECT Contact_ID FROM contacts ORDER BY Contact_ID");
     }
 
     @FXML
@@ -138,7 +134,7 @@ public class AppointmentController implements Initializable {
                 String utcEndDateTime = helper.Time.changeLocalToUTC(endDateTimeStr);
 
                 // creating new row and creates new appointment object with values
-                boolean rowsChanged = ManageQuery.createRowQuery(title, description, location, type, utcStartDateTime,
+                boolean rowsChanged = HelperQuery.createRowQuery(title, description, location, type, utcStartDateTime,
                         utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID), String.valueOf(userID));
 
                 if (rowsChanged) {
@@ -205,8 +201,10 @@ public class AppointmentController implements Initializable {
         if(Validation.isEmptyDatePicker(endDate, "End Date")){
             return false;
         }
-
-        // TODO add validation for date ranges.
+        // checks if dates are valid when they are not empty
+        else if(Validation.isInvalidDateCombination(startDate, endDate, "Start Date or End Date")){
+            return false;
+        }
 
         // validation for ID's in combo boxes
         if(Validation.isEmptyComboBox(customerId, "Customer ID")){
@@ -221,6 +219,19 @@ public class AppointmentController implements Initializable {
 
         else {
             return true;
+        }
+    }
+
+    @FXML
+    void onCancelAction() {
+        Optional<ButtonType> result = Alerts.showConfirmAlert("cancelConfirm", "");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                System.out.println("User canceled action... Switching back to home screen.");
+                switchToHomeScene();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

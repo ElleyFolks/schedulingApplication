@@ -10,8 +10,8 @@ public class LoginQuery {
         String searchString = "SELECT * FROM users WHERE User_Name=? AND Password=?";
 
         // Creating prepared statement
-        ManageQuery.createPreparedStatement(JDBC.getConnection(),searchString);
-        PreparedStatement preparedStatement = ManageQuery.getPreparedStatement();
+        HelperQuery.createPreparedStatement(JDBC.getConnection(),searchString);
+        PreparedStatement preparedStatement = HelperQuery.getPreparedStatement();
 
         // Setting IN (?) parameter placeholders of prepared statement
         preparedStatement.setString(1,username);
