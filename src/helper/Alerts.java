@@ -99,6 +99,7 @@ public class Alerts {
                 alert.setHeaderText("Successfully deleted "+ textFieldName);
                 alert.setContentText("Appointment ID and type: "+ message);
                 alert.showAndWait();
+                break;
         }
     }
 }

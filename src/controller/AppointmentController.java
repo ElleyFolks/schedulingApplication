@@ -16,7 +16,6 @@ import model.Appointment;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -73,13 +72,12 @@ public class AppointmentController implements Initializable {
     @FXML
     private ComboBox<String> contactId;
 
-    Appointment appointmentSelected = null;
+    Appointment appointmentSelected = HomeController.getAppointmentToMod();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         initializeComboBoxes();
-        appointmentSelected = HomeController.getAppointmentToMod();
 
         // will load in values of appointment is selected
         if (appointmentSelected != null) {
@@ -157,9 +155,9 @@ public class AppointmentController implements Initializable {
                 String location = appointmentLocation.getText();
                 String type = appointmentType.getText();
 
-                Integer customerID = Integer.parseInt(String.valueOf(customerId.getValue()));
-                Integer userID = Integer.parseInt(String.valueOf(userId.getValue()));
-                Integer contactID = Integer.parseInt(String.valueOf(contactId.getValue()));
+                String customerID = customerId.getValue();
+                String userID = userId.getValue();
+                String contactID = contactId.getValue();
 
                 // string of date time in format of YYYY-MM-DD hh:hha
                 String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
@@ -167,16 +165,24 @@ public class AppointmentController implements Initializable {
                 String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
                         + endTimeCode.getValue();
 
-                // converting local time to UTC
-                String utcStartDateTime = helper.Time.changeLocalToUTC(startDateTimeStr);
-                String utcEndDateTime = helper.Time.changeLocalToUTC(endDateTimeStr);
+                // converting local time to military
+                String militaryStartDateTime = helper.Time.changeLocalToMilitary(startDateTimeStr);
+                String militaryEndDateTime = helper.Time.changeLocalToMilitary(endDateTimeStr);
 
                 // adds new appointment if none selected
                 if (appointmentSelected == null) {
 
                     // creating new row and creates new appointment object with values
-                    boolean rowsChanged = HelperQuery.createRowQuery(title, description, location, type, utcStartDateTime,
-                            utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID), String.valueOf(userID));
+                    boolean rowsChanged = HelperQuery.createRowQuery(
+                            title,
+                            description,
+                            location,
+                            type,
+                            militaryStartDateTime,
+                            militaryEndDateTime,
+                            contactID,
+                            customerID,
+                            userID);
 
                     if (rowsChanged) {
                         System.out.println("Successfully added new row");
@@ -193,11 +199,20 @@ public class AppointmentController implements Initializable {
 
                     //modifying selected appointment values
                 }else{
-
+                        System.out.println(customerID);
+                        System.out.println(contactID);
+                        System.out.println(userID);
                     boolean rowModified = AppointmentQuery.modifyAppointment(
-                            String.valueOf(appointmentSelected.getAppointmentId()),title, description, location, type,
-                            utcStartDateTime, utcEndDateTime, String.valueOf(contactID), String.valueOf(customerID),
-                            String.valueOf(userID));
+                            String.valueOf(appointmentSelected.getAppointmentId()),
+                            title,
+                            description,
+                            location,
+                            type,
+                            militaryStartDateTime,
+                            militaryEndDateTime,
+                            customerID,
+                            userID,
+                            contactID);
                     if (rowModified) {
                         System.out.println("Successfully modified row");
 
@@ -218,6 +233,8 @@ public class AppointmentController implements Initializable {
     }
 
     boolean isValidAppointment(){
+
+
         // validation for text fields
         if (Validation.isEmptyString(appointmentTitle, "Title")){
             return false;
@@ -252,16 +269,18 @@ public class AppointmentController implements Initializable {
         if(Validation.isEmptyComboBox(endTimeCode, "End Timecode (AM or PM)")){
             return false;
         }
-
         String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
                 + startTimeCode.getValue();
         String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
                 + endTimeCode.getValue();
 
-        LocalDateTime utcStartDateTime = helper.Time.localToUtcDateTime(startDateTimeStr);
-        LocalDateTime utcEndDateTime = helper.Time.localToUtcDateTime(endDateTimeStr);
+        String militaryStartDateTime = helper.Time.changeLocalToMilitary(startDateTimeStr);
+        String militaryEndDateTime = helper.Time.changeLocalToMilitary(endDateTimeStr);
 
-        if(Validation.isInvalidTimeCombination(utcStartDateTime,utcEndDateTime,"Start time or End time")){
+        if(Validation.isInvalidTimeCombination(
+                LocalDateTime.parse(militaryStartDateTime),
+                LocalDateTime.parse(militaryEndDateTime),
+                "Start time or End time")){
             return false;
         }
 

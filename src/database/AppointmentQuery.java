@@ -87,7 +87,8 @@ public class AppointmentQuery {
     }
 
 
-    public static ObservableList<Appointment> getRangeAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView, String interval) {
+    public static ObservableList<Appointment> getRangeAppointments(ObservableList<Appointment> appointments,
+                                                                   TableView<Appointment> tableView, String interval) {
         // TODO figure out if this needs to be converted?
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:00");
         String currentDate = LocalDateTime.now().format(formatter);
@@ -175,15 +176,16 @@ public class AppointmentQuery {
             preparedStatement.setInt(10, Integer.parseInt(appointmentId));
 
             try {
-                Integer numberRowsChanged = preparedStatement.executeUpdate();
-                if (numberRowsChanged != null && preparedStatement.getUpdateCount() > 0) {
+                preparedStatement.execute();
+                if (preparedStatement.getUpdateCount() > 0) {
                     System.out.println("Number rows changed: " + preparedStatement.getUpdateCount());
                 } else {
                     System.out.println("No rows changed.");
                 }
                 return true;
             } catch (Exception e) {
-                System.out.println("Could not delete row! " + e.getMessage());
+                e.printStackTrace();
+
                 return false;
             }
 

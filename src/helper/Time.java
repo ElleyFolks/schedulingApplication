@@ -8,19 +8,19 @@ import java.time.format.DateTimeFormatter;
 
 public class Time {
 
-    public static String changeLocalToUTC(String dateTime){
+    public static String changeLocalToMilitary(String dateTime){
+        // time in local
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime,formatter);
 
-        // Converting time to UTC and changing format of 24 hour time
-        LocalDateTime utcDateTime = localDateTime
+        // Converting time to 24 hour time
+        LocalDateTime militaryDateTime = localDateTime
                 .atZone(Main.userTimeZone)
-                .withZoneSameInstant(ZoneOffset.UTC)
                 .toLocalDateTime();
 
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        return utcDateTime.format(outputFormatter);
+        return militaryDateTime.format(outputFormatter);
     }
 
     public static LocalDateTime localToUtcDateTime(String dateTime){
