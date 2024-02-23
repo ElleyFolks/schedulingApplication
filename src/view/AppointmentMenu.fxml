@@ -62,12 +62,12 @@
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <Text fx:id="startTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Time" GridPane.rowIndex="4">
+                  <Text fx:id="startTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Time" GridPane.rowIndex="5">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <Text fx:id="startDateText" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Date" GridPane.rowIndex="5">
+                  <Text fx:id="startDateText" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Date" GridPane.rowIndex="4">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -87,12 +87,12 @@
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <Text fx:id="endDateText" strokeType="OUTSIDE" strokeWidth="0.0" text="End Date" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                  <Text fx:id="endDateText" strokeType="OUTSIDE" strokeWidth="0.0" text="End Date" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <Text fx:id="endTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="End Time" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                  <Text fx:id="endTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="End Time" GridPane.columnIndex="2" GridPane.rowIndex="5">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -101,19 +101,19 @@
                   <TextField fx:id="appointmentDescription" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="appointmentLocation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField fx:id="appointmentType" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <DatePicker fx:id="startDate" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <DatePicker fx:id="endDate" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                  <DatePicker fx:id="startDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <DatePicker fx:id="endDate" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                   <ComboBox fx:id="customerId" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <ComboBox fx:id="userId" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                   <ComboBox fx:id="contactId" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
                         <ComboBox fx:id="startHour" prefWidth="150.0" />
                         <ComboBox fx:id="startMinute" prefWidth="150.0" />
                         <ComboBox fx:id="startTimeCode" prefWidth="150.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                  <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="5">
                      <children>
                         <ComboBox fx:id="endHour" prefWidth="150.0" />
                         <ComboBox fx:id="endMinute" prefWidth="150.0" />

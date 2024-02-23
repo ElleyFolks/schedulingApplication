@@ -166,8 +166,8 @@ public class AppointmentController implements Initializable {
                         + endTimeCode.getValue();
 
                 // converting local time to military
-                String militaryStartDateTime = helper.Time.changeLocalToMilitary(startDateTimeStr);
-                String militaryEndDateTime = helper.Time.changeLocalToMilitary(endDateTimeStr);
+                String militaryStartDateTime = helper.Time.localTo24String(startDateTimeStr);
+                String militaryEndDateTime = helper.Time.localTo24String(endDateTimeStr);
 
                 // adds new appointment if none selected
                 if (appointmentSelected == null) {
@@ -234,7 +234,6 @@ public class AppointmentController implements Initializable {
 
     boolean isValidAppointment(){
 
-
         // validation for text fields
         if (Validation.isEmptyString(appointmentTitle, "Title")){
             return false;
@@ -246,6 +245,18 @@ public class AppointmentController implements Initializable {
             return false;
         }
         if (Validation.isEmptyString(appointmentType, "Type")){
+            return false;
+        }
+
+        // validation for dates
+        if(Validation.isEmptyDatePicker(startDate, "Start Date")){
+            return false;
+        }
+        if(Validation.isEmptyDatePicker(endDate, "End Date")){
+            return false;
+        }
+        // checks if dates are valid
+        if(Validation.isInvalidDateCombination(startDate, endDate, "Start Date or End Date")){
             return false;
         }
 
@@ -269,32 +280,24 @@ public class AppointmentController implements Initializable {
         if(Validation.isEmptyComboBox(endTimeCode, "End Timecode (AM or PM)")){
             return false;
         }
+
         String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()
                 + startTimeCode.getValue();
         String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
                 + endTimeCode.getValue();
 
-        String militaryStartDateTime = helper.Time.changeLocalToMilitary(startDateTimeStr);
-        String militaryEndDateTime = helper.Time.changeLocalToMilitary(endDateTimeStr);
+        LocalDateTime militaryStartDateTime = helper.Time.localTo24DateTime(startDateTimeStr);
+        LocalDateTime militaryEndDateTime = helper.Time.localTo24DateTime(endDateTimeStr);
+
+        // checks if date is on weekend
+        if(Validation.dateIsOutsideBusinessHours(militaryStartDateTime, militaryEndDateTime)){
+            return false;
+        }
 
         if(Validation.isInvalidTimeCombination(
-                LocalDateTime.parse(militaryStartDateTime),
-                LocalDateTime.parse(militaryEndDateTime),
+                militaryStartDateTime,
+                militaryEndDateTime,
                 "Start time or End time")){
-            return false;
-        }
-
-        // TODO add validation for time ranges. Look up business hours in EST.
-
-        // validation for dates
-        if(Validation.isEmptyDatePicker(startDate, "Start Date")){
-            return false;
-        }
-        if(Validation.isEmptyDatePicker(endDate, "End Date")){
-            return false;
-        }
-        // checks if dates are valid when they are not empty
-        else if(Validation.isInvalidDateCombination(startDate, endDate, "Start Date or End Date")){
             return false;
         }
 
@@ -308,6 +311,12 @@ public class AppointmentController implements Initializable {
         if(Validation.isEmptyComboBox(contactId, "Contact ID")){
             return false;
         }
+
+
+
+        // TODO add validation for time ranges. Look up business hours in EST.
+
+
 
         else {
             return true;

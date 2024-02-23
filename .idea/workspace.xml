@@ -7,9 +7,10 @@
     <list default="true" id="94007dc8-39b9-4af7-a6ce-42114a118c61" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/AppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/AppointmentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/AppointmentQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/AppointmentQuery.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/helper/Alerts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/helper/Alerts.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/helper/Time.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/helper/Time.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helper/Validation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/helper/Validation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/AppointmentMenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/AppointmentMenu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

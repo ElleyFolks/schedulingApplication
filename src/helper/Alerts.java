@@ -13,35 +13,35 @@ public class Alerts {
         switch(alertCode) {
             case "emptyTextField":
                 alert.setTitle("Input error.");
-                alert.setHeaderText("Could not add appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("Please enter valid information into "+ textFieldName +".");
                 alert.showAndWait();
                 break;
 
             case "notValidInt":
                 alert.setTitle("Input error.");
-                alert.setHeaderText("Could not add appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("Please enter a valid integer into "+ textFieldName +".");
                 alert.showAndWait();
                 break;
 
             case "comboBoxNotSelected":
                 alert.setTitle("Selection error.");
-                alert.setHeaderText("Could not add appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("Please select an option for "+ textFieldName +".");
                 alert.showAndWait();
                 break;
 
             case "datePickerNotSelected":
                 alert.setTitle("Selection error.");
-                alert.setHeaderText("Could not add appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("Please select a date for "+ textFieldName +".");
                 alert.showAndWait();
                 break;
 
             case "invalidTimeCombination":
                 alert.setTitle("Selection error.");
-                alert.setHeaderText("Could not add appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("Start time must be before the end time. " +
                         "Please change "+ textFieldName +".");
                 alert.showAndWait();
@@ -49,7 +49,7 @@ public class Alerts {
 
             case"invalidDateCombination":
                 alert.setTitle("Selection error.");
-                alert.setHeaderText("Could not add appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("Start date must be before the end date. " +
                         "Please change "+ textFieldName +".");
                 alert.showAndWait();
@@ -64,8 +64,22 @@ public class Alerts {
 
             case "noAppointmentSelected":
                 alert.setTitle("Selection error.");
-                alert.setHeaderText("Could not modify appointment.");
+                alert.setHeaderText("Incorrect appointment details.");
                 alert.setContentText("No "+textFieldName+" selected. Please select a(n) "+textFieldName+" to continue.");
+                alert.showAndWait();
+                break;
+
+            case "invalidDateScheduled":
+                alert.setTitle("Selection error.");
+                alert.setHeaderText("Incorrect appointment details.");
+                alert.setContentText("Invalid "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" during the week.");
+                alert.showAndWait();
+                break;
+
+            case "notInBusinessHours":
+                alert.setTitle("Selection error.");
+                alert.setHeaderText("Incorrect appointment details.");
+                alert.setContentText("Invalid "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" within business hours.");
                 alert.showAndWait();
                 break;
         }
