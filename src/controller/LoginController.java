@@ -1,7 +1,9 @@
 package controller;
 
 
+import database.AppointmentQuery;
 import database.LoginQuery;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,10 +15,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.time.Duration;
 import main.Main;
+import model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -88,6 +93,24 @@ public class LoginController implements Initializable {
                     // switching to home screen on successful login
                     try {
                         changeToHome();
+                        Appointment appointment = appointmentWithin15min();
+                        if(appointment != null){
+                            System.out.println("Appointment within 15 minutes of logging in!");
+
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Information");
+                            alert.setHeaderText("There is an appointment within the next 15 minutes!");
+                            alert.setContentText("ID: "+appointment.getAppointmentId()+" Date/Time: "+appointment.getStartDateTime().toString());
+                            alert.showAndWait();
+                        }
+                        else {
+                            System.out.println("NO appointments within 15 minutes of logging in...");
+
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Information");
+                            alert.setHeaderText("There is not an appointment within the next 15 minutes.");
+                            alert.showAndWait();
+                        }
                     } catch (Exception fxExeption) {
                         fxExeption.printStackTrace();
                     }
@@ -102,6 +125,24 @@ public class LoginController implements Initializable {
         }
     }
 
+    public static Appointment appointmentWithin15min() {
+        ObservableList<Appointment> appointments = AppointmentQuery.getAllAppointments();
+        if (appointments != null) {
+            for (Appointment existingAppointment : appointments) {
+                //System.out.println("\n"+LocalDateTime.now());
+                //System.out.println(existingAppointment.getEventStart());
+                Duration duration = Duration.between(LocalDateTime.now(), existingAppointment.getStartDateTime());
+
+                if (Math.abs(duration.toMinutes()) <= 15) {
+                    return existingAppointment;
+                }
+            }
+            return null;
+        } else {
+            System.out.println("Failed to find user appointments.");
+            return null;
+        }
+    }
     private boolean isValidCredentials(String username, String password){
         if(username.isEmpty()){
             if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){

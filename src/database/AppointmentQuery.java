@@ -87,6 +87,44 @@ public class AppointmentQuery {
         return null;
     }
 
+    public static ObservableList<Appointment> getAllAppointments() {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID = c.Contact_ID ORDER BY a.Appointment_ID;";
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
+             ResultSet results = statement.executeQuery()) {
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDateTime startDate = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDateTime endDate = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startDate, endDate, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+
+                    return appointments;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing query: " + e.getMessage());
+        }
+        return appointments;
+    }
+
 
     public static ObservableList<Appointment> getRangeAppointments(ObservableList<Appointment> appointments,
                                                                    TableView<Appointment> tableView, String interval) {

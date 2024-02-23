@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Main extends Application {
 
@@ -41,7 +42,7 @@ public class Main extends Application {
 
     public static void main(String[] args){
 
-        //Locale.setDefault(new Locale("fr")); TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+        Locale.setDefault(new Locale("fr")); TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
 
         JDBC.establishConnection();
 
