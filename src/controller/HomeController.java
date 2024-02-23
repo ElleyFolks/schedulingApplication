@@ -165,7 +165,7 @@ public class HomeController implements Initializable {
 
         Stage stage = Main.getPrimaryStage();
         stage.hide();
-        stage.setTitle("Add Appointment");
+        stage.setTitle("Appointment");
         stage.setScene(scene);
         stage.show();
     }

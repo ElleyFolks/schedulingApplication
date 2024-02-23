@@ -312,15 +312,23 @@ public class AppointmentController implements Initializable {
             return false;
         }
 
-
-
-        // TODO add validation for time ranges. Look up business hours in EST.
-
-
-
-        else {
-            return true;
+        // checking for overlapping appointments if modifying an existing appointment
+        if(appointmentSelected != null){
+            if(Validation.overlappingAppointment(militaryStartDateTime,
+                    militaryEndDateTime,
+                    Integer.parseInt(customerId.getValue()),
+                    appointmentSelected.getAppointmentId())){
+                return false;}
         }
+        // checking for overlapping appointments when creating a new appointment
+        else{
+            if(Validation.overlappingAppointment(militaryStartDateTime,
+                    militaryEndDateTime,
+                    Integer.parseInt(customerId.getValue()))){
+                return false;}
+        }
+
+        return true;
     }
 
     @FXML

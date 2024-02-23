@@ -1,8 +1,11 @@
 package helper;
 
+import database.AppointmentQuery;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import model.Appointment;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -100,6 +103,70 @@ public class Validation {
         } else{
             return false;
         }
+    }
+
+    // For adding NEW appointment
+    public static boolean overlappingAppointment(LocalDateTime newStartDate, LocalDateTime newEndDate, int cusID){
+        ObservableList<Appointment> appointments = AppointmentQuery.getAppointmentsWithCustomerID(cusID);
+        if(appointments != null){
+            for(Appointment existingAppointment: appointments){
+                System.out.println("\n"+newStartDate);
+                System.out.println(newEndDate);
+                System.out.println(existingAppointment.getStartDateTime());
+                System.out.println(existingAppointment.getEndDateTime());
+                if(existingAppointment.getStartDateTime().isAfter(newStartDate) && existingAppointment.getStartDateTime().isBefore(newEndDate)){
+                    System.out.println("Overlapping appointment found!");
+                    Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                    return true;
+                } else if (newStartDate.isAfter(existingAppointment.getStartDateTime()) && newStartDate.isBefore(existingAppointment.getEndDateTime())){
+                    System.out.println("Overlapping appointment found!");
+                    Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                    return true;
+                } else if (newStartDate.equals(existingAppointment.getStartDateTime()) || newEndDate.equals(existingAppointment.getEndDateTime())) {
+                    System.out.println("Overlapping appointment found!");
+                    Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                    return true;
+                }
+            }
+        }
+        else{
+            System.out.println("Failed to find user appointments.");
+            return false;
+        }
+        return false;
+    }
+
+    // For modifying EXISTING appointment
+    public static boolean overlappingAppointment(LocalDateTime newStartDate, LocalDateTime newEndDate, int cusID, int appointmentID){
+        ObservableList<Appointment> appointments = AppointmentQuery.getAppointmentsWithCustomerID(cusID);
+        if(appointments != null){
+            for(Appointment existingAppointment: appointments){
+                System.out.println("\n"+newStartDate);
+                System.out.println(newEndDate);
+                System.out.println(existingAppointment.getStartDateTime());
+                System.out.println(existingAppointment.getEndDateTime());
+                if(appointmentID != existingAppointment.getAppointmentId()){
+                    if(existingAppointment.getStartDateTime().isAfter(newStartDate) && existingAppointment.getStartDateTime().isBefore(newEndDate)){
+                        System.out.println("Overlapping appointment found!");
+                        Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                        return true;
+                    } else if (newStartDate.isAfter(existingAppointment.getStartDateTime()) && newStartDate.isBefore(existingAppointment.getEndDateTime())){
+                        System.out.println("Overlapping appointment found!");
+                        Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                        return true;
+                    } else if (newStartDate.equals(existingAppointment.getStartDateTime()) || newEndDate.equals(existingAppointment.getAppointmentId())) {
+                        System.out.println("Overlapping appointment found!");
+                        Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                        return true;
+                    }
+                }
+            }
+        }
+        else{
+            System.out.println("Failed to find user appointments.");
+            return false;
+        }
+        return false;
     }
 
 }

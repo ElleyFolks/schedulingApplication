@@ -1,6 +1,7 @@
 package database;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -217,6 +218,49 @@ public class AppointmentQuery {
             throw new RuntimeException(sqlException);
         }
     }
+
+    public static ObservableList<Appointment> getAppointmentsWithCustomerID(int customerID) {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID WHERE Customer_ID=?;";
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
+
+            statement.setInt(1, customerID);
+            ResultSet results = statement.executeQuery();
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDateTime startDate = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDateTime endDate = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startDate, endDate, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+                    return appointments;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing query: " + e.getMessage());
+            return null;
+        }
+        return appointments;
+    }
+
 }
 
 

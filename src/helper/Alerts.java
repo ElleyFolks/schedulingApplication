@@ -82,6 +82,13 @@ public class Alerts {
                 alert.setContentText("Invalid "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" within business hours.");
                 alert.showAndWait();
                 break;
+
+            case "overlappingAppointment":
+                alert.setTitle("Scheduling error.");
+                alert.setHeaderText("Overlapping appointments detected.");
+                alert.setContentText("Overlapping "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" at a different time.");
+                alert.showAndWait();
+                break;
         }
     }
 
