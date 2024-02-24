@@ -72,6 +72,8 @@ public class AppointmentController implements Initializable {
     @FXML
     private ComboBox<String> contactId;
 
+    private Map<String, Integer> nameIdMap = new HashMap<>();
+
     Appointment appointmentSelected = HomeController.getAppointmentToMod();
 
     @Override
@@ -102,7 +104,7 @@ public class AppointmentController implements Initializable {
 
             customerId.setValue(String.valueOf(appointmentSelected.getCustomerId()));
             userId.setValue(String.valueOf(appointmentSelected.getUserId()));
-            contactId.setValue(String.valueOf(appointmentSelected.getContactId()));
+            contactId.setValue(appointmentSelected.getContactFullName());
         }
     }
 
@@ -143,7 +145,7 @@ public class AppointmentController implements Initializable {
         HelperQuery.setComboBoxOptions(userId,"SELECT User_ID FROM users ORDER BY User_ID");
 
         // adding combo box options for contact ID
-        HelperQuery.setComboBoxOptions(contactId, "SELECT Contact_ID FROM contacts ORDER BY Contact_ID");
+        AppointmentQuery.getContactNameID(contactId, "SELECT Contact_Name, Contact_ID FROM contacts ORDER BY Contact_ID", nameIdMap);
     }
 
     @FXML
@@ -157,7 +159,7 @@ public class AppointmentController implements Initializable {
 
                 String customerID = customerId.getValue();
                 String userID = userId.getValue();
-                String contactID = contactId.getValue();
+                String contactID = String.valueOf(nameIdMap.get(contactId.getValue()));
 
                 // string of date time in format of YYYY-MM-DD hh:hha
                 String startDateTimeStr = startDate.getValue() + " " + startHour.getValue() + ":" + startMinute.getValue()

@@ -3,6 +3,7 @@ package database;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Appointment;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public class AppointmentQuery {
 
@@ -124,7 +126,6 @@ public class AppointmentQuery {
         }
         return appointments;
     }
-
 
     public static ObservableList<Appointment> getRangeAppointments(ObservableList<Appointment> appointments,
                                                                    TableView<Appointment> tableView, String interval) {
@@ -297,6 +298,27 @@ public class AppointmentQuery {
             return null;
         }
         return appointments;
+    }
+
+    public static void getContactNameID(ComboBox<String> comboBox, String query, Map<String, Integer> nameIdMap) {
+        ObservableList<String> items = FXCollections.observableArrayList();
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
+             ResultSet results = statement.executeQuery()) {
+
+            while (results.next()) {
+                String name = results.getString(1);
+                items.add(name);
+
+                // Assuming the ID is in the second column of the result set
+                int id = results.getInt(2);
+                nameIdMap.put(name, id);
+            }
+
+            comboBox.setItems(items);
+        } catch (SQLException e) {
+            System.err.println("Could not get contact name: " + e.getMessage());
+        }
     }
 
 }
