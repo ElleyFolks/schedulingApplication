@@ -110,8 +110,18 @@ public class AppointmentQuery {
                         int contactId = results.getInt("Contact_ID");
                         String contactName = results.getString("Contact_Name");
 
-                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
-                                startDate, endDate, customerId, userId, contactId, contactName);
+                        Appointment appointment = new Appointment(
+                                appointmentId,
+                                title,
+                                description,
+                                location,
+                                type,
+                                startDate,
+                                endDate,
+                                customerId,
+                                userId,
+                                contactId,
+                                contactName);
 
                         appointments.add(appointment);
                     }

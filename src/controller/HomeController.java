@@ -1,5 +1,6 @@
 package controller;
 
+import database.CustomerQuery;
 import helper.Alerts;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import main.Main;
 import model.Appointment;
+import model.Customer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,11 +25,12 @@ import java.util.ResourceBundle;
 
 
 public class HomeController implements Initializable {
-    @FXML
-    TableView<ObservableList<String>> customersTable = new TableView<>();
 
     @FXML
     TableView<Appointment> appointmentsTable = new TableView<>();
+
+    @FXML
+    TableView<Customer> customersTable = new TableView<>();
 
     @FXML
     private RadioButton allRadioButton;
@@ -49,16 +52,17 @@ public class HomeController implements Initializable {
     @FXML
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
+    @FXML
+    ObservableList<Customer> customers = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
 
-            // Set padding to create a border around the TableView
-            //customersTable.setPadding(new javafx.geometry.Insets(20));
 
-            //PreparedStatement statement = ManageQuery.createSelectQuery("customers");
-            //ResultSet results = ManageQuery.getQueryResults(statement);
-            //LoadTable.formatAppointmentTable(customersTable, results);
+            customersTable.setPadding(new javafx.geometry.Insets(20));
+            CustomerQuery.formatCustomerTable(customersTable);
+            ObservableList<Customer> allCustomers = CustomerQuery.getAllCustomers(customers, customersTable);
 
             // all appointments displayed by default
             allRadioButton.setSelected(true);
