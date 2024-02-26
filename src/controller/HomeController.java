@@ -58,18 +58,16 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-
-
             customersTable.setPadding(new javafx.geometry.Insets(20));
             CustomerQuery.formatCustomerTable(customersTable);
-            ObservableList<Customer> allCustomers = CustomerQuery.getAllCustomers(customers, customersTable);
+            CustomerQuery.getAllCustomers(customers, customersTable);
 
             // all appointments displayed by default
             allRadioButton.setSelected(true);
 
             appointmentsTable.setPadding(new javafx.geometry.Insets(20));
             AppointmentQuery.formatAppointmentTable(appointmentsTable);
-            ObservableList<Appointment> allAppointments = AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
+            AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
 
             populateAppointmentTable();
 
@@ -85,17 +83,17 @@ public class HomeController implements Initializable {
 
             if(allRadioButton.isSelected()){
 
-                ObservableList<Appointment> allAppointments = AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
+                AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
                 System.out.println("Displaying all appointments");
             }
             if(monthRadioButton.isSelected()){
 
-                ObservableList<Appointment> monthAppointments = AppointmentQuery.getRangeAppointments(appointments, appointmentsTable, "month");
+                AppointmentQuery.getRangeAppointments(appointments, appointmentsTable, "month");
                 System.out.println("Displaying appointments for month");
             }
             if(weekRadioButton.isSelected()){
 
-                ObservableList<Appointment> weekAppointments = AppointmentQuery.getRangeAppointments(appointments, appointmentsTable, "week");
+                AppointmentQuery.getRangeAppointments(appointments, appointmentsTable, "week");
                 System.out.println("Displaying appointments for week");
             }
 

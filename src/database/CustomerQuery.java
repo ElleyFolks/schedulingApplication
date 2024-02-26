@@ -42,7 +42,7 @@ public class CustomerQuery {
         System.out.println("Table view created.");
     }
 
-    public static ObservableList<Customer> getAllCustomers(ObservableList<Customer> customers, TableView<Customer> tableView) {
+    public static void getAllCustomers(ObservableList<Customer> customers, TableView<Customer> tableView) {
 
         String query = "SELECT * FROM customers AS c " +
                 "INNER JOIN first_level_divisions AS d ON c.Division_ID = d.Division_ID " +
@@ -80,7 +80,6 @@ public class CustomerQuery {
                     tableView.refresh();
 
                     System.out.println("Successfully added data!");
-                    return customers;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -88,6 +87,5 @@ public class CustomerQuery {
         } catch (SQLException e) {
             System.err.println("Error executing query: " + e.getMessage());
         }
-        return null;
     }
 }

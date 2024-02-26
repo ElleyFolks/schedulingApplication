@@ -46,7 +46,7 @@ public class AppointmentQuery {
     }
 
 
-    public static ObservableList<Appointment> getAllAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView) {
+    public static void getAllAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView) {
         String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID ORDER BY a.Appointment_ID;";
 
         try (PreparedStatement statement = JDBC.getConnection().prepareStatement(sqlQuery);
@@ -76,7 +76,7 @@ public class AppointmentQuery {
                     tableView.refresh();
 
                     System.out.println("Successfully added data!");
-                    return appointments;
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                     System.out.println("Failed to add table data...");
@@ -86,9 +86,14 @@ public class AppointmentQuery {
             // Log or throw a more specific exception
             System.err.println("Error executing query: " + sqlException.getMessage());
         }
-        return null;
     }
 
+    /**
+     * Runs a select SQL command to get all appointments from DB. Stores this information in a class object
+     * for appointments.
+     * Sets table view
+     * @return
+     */
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID = c.Contact_ID ORDER BY a.Appointment_ID;";
@@ -137,7 +142,7 @@ public class AppointmentQuery {
         return appointments;
     }
 
-    public static ObservableList<Appointment> getRangeAppointments(ObservableList<Appointment> appointments,
+    public static void getRangeAppointments(ObservableList<Appointment> appointments,
                                                                    TableView<Appointment> tableView, String interval) {
         // TODO figure out if this needs to be converted?
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:00");
@@ -192,7 +197,7 @@ public class AppointmentQuery {
                         tableView.refresh();
 
                         System.out.println("Successfully added data!");
-                        return appointments;
+
                     } catch (SQLException e) {
                         e.printStackTrace();
                         System.out.println("Failed to add table data...");
@@ -202,7 +207,6 @@ public class AppointmentQuery {
                 // Log or throw a more specific exception
                 System.err.println("Error executing query: " + sqlException.getMessage());
             }
-        return null;
     }
 
     public static boolean modifyAppointment(String appointmentId, String title, String description, String location,
