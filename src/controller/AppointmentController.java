@@ -74,7 +74,7 @@ public class AppointmentController implements Initializable {
 
     private Map<String, Integer> nameIdMap = new HashMap<>();
 
-    Appointment appointmentSelected = HomeController.getAppointmentToMod();
+    Appointment appointmentSelected = HomeController.getAppointmentToModify();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

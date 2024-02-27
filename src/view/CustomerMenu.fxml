@@ -58,7 +58,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Division" GridPane.rowIndex="5">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Division" GridPane.columnIndex="2" GridPane.rowIndex="5">
                             <font>
                                 <Font size="20.0" />
                             </font>
@@ -68,7 +68,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Country" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Country" GridPane.rowIndex="5">
                             <font>
                                 <Font size="20.0" />
                             </font>
@@ -77,14 +77,14 @@
                         <TextField fx:id="nameTxtField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="addressTxtField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="postalCodeTxtField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="5">
                             <children>
                                 <ComboBox fx:id="divisionComboBox" prefWidth="150.0" />
                             </children>
                         </HBox>
-                        <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                        <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
                             <children>
-                                <ComboBox fx:id="countryComboBox" prefWidth="150.0" />
+                                <ComboBox fx:id="countryComboBox" onAction="#onCountrySelectAction" prefWidth="150.0" />
                             </children>
                         </HBox>
                   <TextField fx:id="phoneTxtField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -93,7 +93,7 @@
                 <ButtonBar prefHeight="40.0">
                     <buttons>
                         <Button fx:id="customerSave" mnemonicParsing="false" text="Save" />
-                        <Button fx:id="customerCancel" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="customerCancel" mnemonicParsing="false" onAction="#onCancelAction" text="Cancel" />
                     </buttons>
                 </ButtonBar>
             </children>

@@ -49,6 +49,8 @@ public class HomeController implements Initializable {
 
     public static Appointment appointmentToModify;
 
+    public static Customer customerToModify;
+
     @FXML
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -103,7 +105,10 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    public static Appointment getAppointmentToMod(){return appointmentToModify;}
+    public static Appointment getAppointmentToModify(){return appointmentToModify;}
+
+    @FXML
+    public static Customer getCustomerToModify(){return customerToModify;}
 
     @FXML
     void onAddAppointmentAction(){
@@ -113,6 +118,17 @@ public class HomeController implements Initializable {
 
         } catch(Exception fxmlException){
             System.out.println("Error loading appointment screen: "+fxmlException.getMessage());
+        }
+    }
+
+    @FXML
+    void onAddCustomerAction(){
+        customerToModify = null;
+        try{
+            switchToCustomerScene();
+
+        } catch(Exception fxmlException){
+            System.out.println("Error loading customer screen: "+fxmlException.getMessage());
         }
     }
 
@@ -168,6 +184,19 @@ public class HomeController implements Initializable {
         Stage stage = Main.getPrimaryStage();
         stage.hide();
         stage.setTitle("Appointment");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void switchToCustomerScene() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/CustomerMenu.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+
+        Stage stage = Main.getPrimaryStage();
+        stage.hide();
+        stage.setTitle("Customer");
         stage.setScene(scene);
         stage.show();
     }

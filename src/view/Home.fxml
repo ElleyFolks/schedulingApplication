@@ -33,7 +33,7 @@
                                     <TableView fx:id="customersTable" />
                                     <ButtonBar>
                                        <buttons>
-                                        <Button fx:id="addCustomerBtn" mnemonicParsing="false" prefHeight="25.0" text="Add" />
+                                        <Button fx:id="addCustomerBtn" mnemonicParsing="false" onAction="#onAddCustomerAction" prefHeight="25.0" text="Add" />
                                           <Button fx:id="modifyCustomerBtn" mnemonicParsing="false" text="Modify" />
                                           <Button fx:id="removeCustomerBtn" mnemonicParsing="false" text="Remove" />
                                        </buttons>

@@ -121,11 +121,12 @@
                         <ComboBox fx:id="endTimeCode" prefWidth="150.0" />
                      </children>
                   </HBox>
-                  <Text fx:id="titleText1" strokeType="OUTSIDE" strokeWidth="0.0" text="Title">
+                  <Text fx:id="titleText1" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment ID">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Text>
+                  <TextField fx:id="appointmentIdField" disable="true" promptText="Cannot Edit" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <ButtonBar prefHeight="40.0">
