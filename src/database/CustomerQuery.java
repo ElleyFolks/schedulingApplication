@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -88,6 +89,104 @@ public class CustomerQuery {
             }
         } catch (SQLException e) {
             System.err.println("Error executing query: " + e.getMessage());
+        }
+    }
+
+    public static boolean createNewCustomer(String customerName, String address, String postalCode, String phoneNumber,
+                                            Integer divisionID){
+
+
+        String sqlString = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Division_ID) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            // Creating prepared statement
+            HelperQuery.createPreparedStatement(JDBC.getConnection(), sqlString);
+            PreparedStatement preparedStatement = HelperQuery.getPreparedStatement();
+
+            // setting IN parameters
+            preparedStatement.setString(1, customerName);
+            preparedStatement.setString(2, address);
+            preparedStatement.setString(3, postalCode);
+            preparedStatement.setString(4, phoneNumber);
+            preparedStatement.setInt(5, divisionID);
+
+            try {
+                //executing prepared statement, returns number of rows affected
+                int rowsChanged = preparedStatement.executeUpdate();
+
+                if(rowsChanged > 0){
+                    System.out.println("Number of rows affected: "+rowsChanged);
+                }else{
+                    System.out.println("No rows affected");
+                }
+
+                return true;
+
+            }catch(Exception executeException){
+                System.out.println("Error: " + executeException.getMessage());
+
+            }
+        }catch(Exception exception){
+            System.out.println("Database Error?! " + exception.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean modifyCustomer(Integer customerID, String customerName, String address, String postalCode,
+                                            String phoneNumber, String divisionId) {
+        String sqlQuery = "UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, " +
+                "Division_ID=? WHERE Customer_ID = ?;";
+        try {
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery);
+
+            preparedStatement.setString(1, customerName);
+            preparedStatement.setString(2, address);
+            preparedStatement.setString(3, postalCode);
+            preparedStatement.setString(4, phoneNumber);
+            preparedStatement.setInt(5, Integer.parseInt(divisionId));
+            preparedStatement.setInt(6, customerID);
+
+            try {
+                preparedStatement.execute();
+                if (preparedStatement.getUpdateCount() > 0) {
+                    System.out.println("Number rows changed: " + preparedStatement.getUpdateCount());
+                } else {
+                    System.out.println("No rows changed.");
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                return false;
+            }
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    public static boolean removeCustomer(int columnId){
+        String sqlQuery = "DELETE from customers WHERE Customer_ID=?";
+
+        try {
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setObject(1, columnId);
+            try {
+                Integer numberRowsChanged = preparedStatement.executeUpdate();
+                if (numberRowsChanged != null && preparedStatement.getUpdateCount() > 0) {
+                    System.out.println("Number rows changed: " + preparedStatement.getUpdateCount());
+                } else {
+                    System.out.println("No rows changed.");
+                }
+                return true;
+
+            }catch(Exception e){
+                System.out.println("Could not delete row! "+ e.getMessage());
+                return false;
+            }
+        }catch(SQLException sqlException){
+            throw new RuntimeException(sqlException);
         }
     }
 

@@ -69,6 +69,13 @@ public class Alerts {
                 alert.showAndWait();
                 break;
 
+            case "noCustomerSelected":
+                alert.setTitle("Selection error.");
+                alert.setHeaderText("Incorrect appointment details.");
+                alert.setContentText("No "+textFieldName+" selected. Please select a(n) "+textFieldName+" to continue.");
+                alert.showAndWait();
+                break;
+
             case "invalidDateScheduled":
                 alert.setTitle("Selection error.");
                 alert.setHeaderText("Incorrect appointment details.");

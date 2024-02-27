@@ -22,6 +22,9 @@ import java.util.*;
 public class AppointmentController implements Initializable {
 
     @FXML
+    private TextField appointmentId;
+
+    @FXML
     private Button appointmentCancel;
 
     @FXML
@@ -83,7 +86,7 @@ public class AppointmentController implements Initializable {
 
         // will load in values of appointment is selected
         if (appointmentSelected != null) {
-
+            appointmentId.setText(String.valueOf(appointmentSelected.getAppointmentId()));
             appointmentTitle.setText(appointmentSelected.getAppointmentTitle());
             appointmentDescription.setText(appointmentSelected.getAppointmentDescription());
             appointmentLocation.setText(appointmentSelected.getAppointmentLocation());
@@ -175,7 +178,7 @@ public class AppointmentController implements Initializable {
                 if (appointmentSelected == null) {
 
                     // creating new row and creates new appointment object with values
-                    boolean rowsChanged = HelperQuery.createRowQuery(
+                    boolean appointmentCreated = AppointmentQuery.createNewAppointment(
                             title,
                             description,
                             location,
@@ -186,8 +189,8 @@ public class AppointmentController implements Initializable {
                             customerID,
                             userID);
 
-                    if (rowsChanged) {
-                        System.out.println("Successfully added new row");
+                    if (appointmentCreated) {
+                        System.out.println("Successfully added new appointment");
 
                         // switching back to home
                         try {
@@ -196,7 +199,7 @@ public class AppointmentController implements Initializable {
                             System.out.println("FXML error: " + fxmlException.getMessage());
                         }
                     } else {
-                        System.out.println("Adding row failed.");
+                        System.out.println("Adding row appointment.");
                     }
 
                     //modifying selected appointment values
@@ -204,7 +207,7 @@ public class AppointmentController implements Initializable {
                         System.out.println(customerID);
                         System.out.println(contactID);
                         System.out.println(userID);
-                    boolean rowModified = AppointmentQuery.modifyAppointment(
+                    boolean appointmentModified = AppointmentQuery.modifyAppointment(
                             String.valueOf(appointmentSelected.getAppointmentId()),
                             title,
                             description,
@@ -215,8 +218,8 @@ public class AppointmentController implements Initializable {
                             customerID,
                             userID,
                             contactID);
-                    if (rowModified) {
-                        System.out.println("Successfully modified row");
+                    if (appointmentModified) {
+                        System.out.println("Successfully modified appointment");
 
                         // switching back to home
                         try {
@@ -225,11 +228,11 @@ public class AppointmentController implements Initializable {
                             System.out.println("FXML error: " + fxmlException.getMessage());
                         }
                     } else {
-                        System.out.println("Modifying row failed.");
+                        System.out.println("Modifying appointment failed.");
                     }
                 }
             }catch(Exception e){
-                System.out.println("Saving error: " + e.getMessage());
+                System.out.println("Saving appointment error: " + e.getMessage());
             }
         }
     }

@@ -149,7 +149,23 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    void onRemoveAction(){
+    void onModifyCustomerAction(){
+        // gets appointment selected by user (if any)
+        customerToModify = customersTable.getSelectionModel().getSelectedItem();
+
+        // notifies user no appointment was selected to modify
+        if(customerToModify == null){
+            Alerts.showErrorAlert("noCustomerSelected", "customer");
+        }else{
+            try{switchToCustomerScene();
+            }catch(Exception fxmlException){
+                System.out.println("Could not load customer screen"+fxmlException.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    void onRemoveAppointmentAction(){
         Appointment selectedAppointment = appointmentsTable.getSelectionModel().getSelectedItem();
 
         // cannot delete item if nothing is selected
@@ -176,6 +192,32 @@ public class HomeController implements Initializable {
     }
 
     @FXML
+    void onRemoveCustomerAction(){
+        Customer selectedCustomer = customersTable.getSelectionModel().getSelectedItem();
+
+        // cannot delete item if nothing is selected
+        if(selectedCustomer == null){
+            Alerts.showErrorAlert("noSelectedItem", "customer");
+        }
+        else{
+            Optional<ButtonType> result = Alerts.showConfirmAlert("deleteConfirm", "customer");
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                boolean successfulDelete = CustomerQuery.removeCustomer(selectedCustomer.getCustomerId());
+
+                if(successfulDelete){
+                    System.out.println("Customer successfully deleted");
+                    String deleteMessage = String.valueOf(selectedCustomer.getCustomerId()) + " "+ selectedCustomer.getCustomerFullName();
+                    Alerts.showInfoAlert("successfulDelete", "customer",deleteMessage);
+
+                    // updating table
+                    appointments.clear();
+                    customersTable.refresh();
+                }
+            }
+        }
+    }
+
+    @FXML
     void switchToAppointmentScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/AppointmentMenu.fxml"));
 
@@ -187,6 +229,7 @@ public class HomeController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
 
     @FXML
     void switchToCustomerScene() throws IOException {

@@ -34,8 +34,8 @@
                                     <ButtonBar>
                                        <buttons>
                                         <Button fx:id="addCustomerBtn" mnemonicParsing="false" onAction="#onAddCustomerAction" prefHeight="25.0" text="Add" />
-                                          <Button fx:id="modifyCustomerBtn" mnemonicParsing="false" text="Modify" />
-                                          <Button fx:id="removeCustomerBtn" mnemonicParsing="false" text="Remove" />
+                                          <Button fx:id="modifyCustomerBtn" mnemonicParsing="false" onAction="#onModifyCustomerAction" text="Modify" />
+                                          <Button fx:id="removeCustomerBtn" mnemonicParsing="false" onAction="#onRemoveCustomerAction" text="Remove" />
                                        </buttons>
                                     </ButtonBar>
                                  </children>
@@ -79,7 +79,7 @@
                                              <buttons>
                                                 <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#onAddAppointmentAction" prefHeight="25.0" text="Add" />
                                                 <Button fx:id="modifyAppointmentBtn" mnemonicParsing="false" onAction="#onModifyAppointmentAction" text="Modify" />
-                                                <Button fx:id="removeAppointmentBtn" mnemonicParsing="false" onAction="#onRemoveAction" text="Remove" />
+                                                <Button fx:id="removeAppointmentBtn" mnemonicParsing="false" onAction="#onRemoveAppointmentAction" text="Remove" />
                                              </buttons>
                                           </ButtonBar>
                                        </children>

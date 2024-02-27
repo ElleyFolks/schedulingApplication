@@ -18,51 +18,7 @@ public class HelperQuery {
         return pStatement;
     }
 
-    public static boolean createRowQuery(String title, String description, String location, String type, String start,
-                                     String end, String contactID, String customerId, String userID){
 
-
-        String sqlString = "INSERT INTO appointments(Title, Description, Location, Type, Start, " +
-                "End, Customer_ID, Contact_ID, User_ID) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try {
-            // Creating prepared statement
-            HelperQuery.createPreparedStatement(JDBC.getConnection(), sqlString);
-            PreparedStatement preparedStatement = HelperQuery.getPreparedStatement();
-
-            // setting IN parameters
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, description);
-            preparedStatement.setString(3, location);
-            preparedStatement.setString(4, type);
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(start));
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(end));
-            preparedStatement.setInt(7, Integer.parseInt(customerId));
-            preparedStatement.setInt(8, Integer.parseInt(contactID));
-            preparedStatement.setInt(9, Integer.parseInt(userID));
-
-            try {
-                //executing prepared statement, returns number of rows affected
-                int rowsChanged = preparedStatement.executeUpdate();
-
-                if(rowsChanged > 0){
-                    System.out.println("Number of rows affected: "+rowsChanged);
-                }else{
-                    System.out.println("No rows affected");
-                }
-
-                return true;
-
-            }catch(Exception executeException){
-                System.out.println("Error: " + executeException.getMessage());
-
-            }
-        }catch(Exception exception){
-            System.out.println("Database Error?! " + exception.getMessage());
-        }
-        return false;
-    }
 
     /**
      * Used to set values for a combo box of a menu based on a column from a database table.

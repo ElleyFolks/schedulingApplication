@@ -126,7 +126,7 @@
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="appointmentIdField" disable="true" promptText="Cannot Edit" GridPane.columnIndex="1" />
+                  <TextField fx:id="appointmentId" disable="true" promptText="Cannot Edit" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <ButtonBar prefHeight="40.0">
