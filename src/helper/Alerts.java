@@ -96,6 +96,13 @@ public class Alerts {
                 alert.setContentText("Overlapping "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" at a different time.");
                 alert.showAndWait();
                 break;
+
+            case "customerHasAppointment":
+                alert.setTitle("Selection error.");
+                alert.setHeaderText("Cannot delete customer.");
+                alert.setContentText("The customer "+textFieldName+" selected still has scheduled appointments. Please delete associated appointments first.");
+                alert.showAndWait();
+                break;
         }
     }
 

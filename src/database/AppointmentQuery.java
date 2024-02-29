@@ -29,7 +29,8 @@ public class AppointmentQuery {
             // Exclude fields that should not be displayed in the TableView
             if (!field.getName().equals("serialVersionUID")) {
                 // Create TableColumn dynamically
-                TableColumn<Appointment, Object> column = new TableColumn<>(field.getName());
+                String columnName = HelperQuery.formatColumnNames(field.getName());
+                TableColumn<Appointment, Object> column = new TableColumn<>(HelperQuery.formatColumnNames(HelperQuery.removeClassPrefix(columnName, "Appointment")));
                 column.setCellValueFactory(data -> {
                     try {
                         field.setAccessible(true);
@@ -39,6 +40,7 @@ public class AppointmentQuery {
                         return new SimpleObjectProperty<>(null);
                     }
                 });
+
                 tableView.getColumns().add(column);
             }
         }
@@ -208,6 +210,102 @@ public class AppointmentQuery {
                 System.err.println("Error executing query: " + sqlException.getMessage());
             }
     }
+
+    public static void getAppointmentsOfType(TableView<Appointment> tableView, String selectedType) {
+        String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c " +
+                "ON a.Contact_ID=c.Contact_ID WHERE Type=? ORDER BY a.Appointment_ID; ";
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(sqlQuery)){
+             statement.setString(1, selectedType);
+             ResultSet results = statement.executeQuery();
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDateTime startTime = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDateTime endTime = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startTime, endTime, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+
+                    tableView.setItems(appointments);
+                    tableView.refresh();
+
+                    System.out.println("Successfully added data!");
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("Failed to add table data...");
+                }
+            }
+        } catch (SQLException sqlException) {
+            // Log or throw a more specific exception
+            System.err.println("Error executing query: " + sqlException.getMessage());
+        }
+    }
+
+    public static void getAppointmentsOfMonth(TableView<Appointment> tableView, String selectedMonth) {
+        String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c " +
+                "ON a.Contact_ID=c.Contact_ID WHERE MONTH(Start)=? ORDER BY a.Appointment_ID; ";
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(sqlQuery)){
+
+            // This will not work because it must be in the format of YYYY-MM-DD HH:mm:ss
+            statement.setString(1, selectedMonth);
+            ResultSet results = statement.executeQuery();
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDateTime startTime = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDateTime endTime = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startTime, endTime, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+
+                    tableView.setItems(appointments);
+                    tableView.refresh();
+
+                    System.out.println("Successfully added data!");
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("Failed to add table data...");
+                }
+            }
+        } catch (SQLException sqlException) {
+            // Log or throw a more specific exception
+            System.err.println("Error executing query: " + sqlException.getMessage());
+        }
+    }
+
+
     public static boolean createNewAppointment(String title, String description, String location, String type, String start,
                                                String end, String contactID, String customerId, String userID){
 
@@ -320,7 +418,8 @@ public class AppointmentQuery {
     public static ObservableList<Appointment> getAppointmentsWithCustomerID(int customerID) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID WHERE Customer_ID=?;";
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
+                "WHERE Customer_ID=?;";
 
         try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
 
@@ -357,6 +456,99 @@ public class AppointmentQuery {
             return null;
         }
         return appointments;
+    }
+
+    public static void getAppointmentsWithContactID(TableView<Appointment> tableView, Integer contactID) {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
+                "WHERE a.Contact_ID=?;";
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
+
+            statement.setInt(1, contactID);
+            ResultSet results = statement.executeQuery();
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDateTime startDate = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDateTime endDate = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startDate, endDate, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+
+                    tableView.setItems(appointments);
+                    tableView.refresh();
+
+                    System.out.println("Successfully added data!");
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing query: " + e.getMessage());
+        }
+    }
+
+    public static void getAppointmentsWithCountryID(TableView<Appointment> tableView, Integer countryID) {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM appointments AS a " +
+                "INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
+                "INNER JOIN customers AS cu ON a.Customer_ID = cu.Customer_ID "+
+                "INNER JOIN first_level_divisions AS d ON cu.Division_ID = d.Division_ID " +
+                "WHERE d.Country_ID=?;";
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
+
+            statement.setInt(1, countryID);
+            ResultSet results = statement.executeQuery();
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int appointmentId = results.getInt("Appointment_ID");
+                        String title = results.getString("Title");
+                        String description = results.getString("Description");
+                        String location = results.getString("Location");
+                        String type = results.getString("Type");
+                        LocalDateTime startDate = results.getTimestamp("Start").toLocalDateTime();
+                        LocalDateTime endDate = results.getTimestamp("End").toLocalDateTime();
+                        int customerId = results.getInt("Customer_ID");
+                        int userId = results.getInt("User_ID");
+                        int contactId = results.getInt("Contact_ID");
+                        String contactName = results.getString("Contact_Name");
+
+                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
+                                startDate, endDate, customerId, userId, contactId, contactName);
+
+                        appointments.add(appointment);
+                    }
+
+                    tableView.setItems(appointments);
+                    tableView.refresh();
+
+                    System.out.println("Successfully added data!");
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing query: " + e.getMessage());
+        }
     }
 
     public static void getContactNameID(ComboBox<String> comboBox, String query, Map<String, Integer> nameIdMap) {

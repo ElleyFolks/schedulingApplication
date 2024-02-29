@@ -29,7 +29,8 @@ public class CustomerQuery {
             // Exclude fields that should not be displayed in the TableView
             if (!field.getName().equals("serialVersionUID")) {
                 // Create TableColumn dynamically
-                TableColumn<Customer, Object> column = new TableColumn<>(field.getName());
+                String columnName = HelperQuery.formatColumnNames(field.getName());
+                TableColumn<Customer, Object> column = new TableColumn<>(HelperQuery.removeClassPrefix(columnName, "Customer"));
                 column.setCellValueFactory(data -> {
                     try {
                         field.setAccessible(true);
@@ -93,7 +94,7 @@ public class CustomerQuery {
     }
 
     public static boolean createNewCustomer(String customerName, String address, String postalCode, String phoneNumber,
-                                            Integer divisionID){
+                                            Integer divisionID) {
 
 
         String sqlString = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Division_ID) " +
@@ -115,26 +116,26 @@ public class CustomerQuery {
                 //executing prepared statement, returns number of rows affected
                 int rowsChanged = preparedStatement.executeUpdate();
 
-                if(rowsChanged > 0){
-                    System.out.println("Number of rows affected: "+rowsChanged);
-                }else{
+                if (rowsChanged > 0) {
+                    System.out.println("Number of rows affected: " + rowsChanged);
+                } else {
                     System.out.println("No rows affected");
                 }
 
                 return true;
 
-            }catch(Exception executeException){
+            } catch (Exception executeException) {
                 System.out.println("Error: " + executeException.getMessage());
 
             }
-        }catch(Exception exception){
+        } catch (Exception exception) {
             System.out.println("Database Error?! " + exception.getMessage());
         }
         return false;
     }
 
     public static boolean modifyCustomer(Integer customerID, String customerName, String address, String postalCode,
-                                            String phoneNumber, String divisionId) {
+                                         String phoneNumber, String divisionId) {
         String sqlQuery = "UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, " +
                 "Division_ID=? WHERE Customer_ID = ?;";
         try {
@@ -166,7 +167,7 @@ public class CustomerQuery {
         }
     }
 
-    public static boolean removeCustomer(int columnId){
+    public static boolean removeCustomer(int columnId) {
         String sqlQuery = "DELETE from customers WHERE Customer_ID=?";
 
         try {
@@ -181,11 +182,11 @@ public class CustomerQuery {
                 }
                 return true;
 
-            }catch(Exception e){
-                System.out.println("Could not delete row! "+ e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Could not delete row! " + e.getMessage());
                 return false;
             }
-        }catch(SQLException sqlException){
+        } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
         }
     }
@@ -218,9 +219,9 @@ public class CustomerQuery {
 
         String sqlQuery = "SELECT Division,Division_ID  FROM first_level_divisions WHERE COUNTRY_ID = ?;";
 
-        try (PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery)){
-             preparedStatement.setInt(1, countryID);
-             ResultSet results = preparedStatement.executeQuery();
+        try (PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery)) {
+            preparedStatement.setInt(1, countryID);
+            ResultSet results = preparedStatement.executeQuery();
 
             while (results.next()) {
                 String name = results.getString(1);
@@ -237,6 +238,24 @@ public class CustomerQuery {
         }
     }
 
+    public static boolean customerHasAppointment(Integer customerId) {
+        String sqlQuery = "SELECT * FROM appointments " +
+                "AS a INNER JOIN contacts AS c ON a.Contact_ID = c.Contact_ID " +
+                "WHERE Customer_ID = ?;";
+        try {
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery);
+            preparedStatement.setInt(1, customerId);
+
+            try (ResultSet results = preparedStatement.executeQuery()) {
+                System.out.println("Number rows: " + preparedStatement.getUpdateCount());
+                return results.next();
+            }
+        } catch (Exception e) {
+            System.out.println("Error executing query. " + e.getMessage());
+            return false;
+        }
+    }
 
 
 }
+
