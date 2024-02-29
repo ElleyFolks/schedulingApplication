@@ -6,19 +6,27 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import model.Appointment;
 import model.Customer;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Map;
 
+/**
+ * Class that contains sql queries logical implementation for creating / updating / deleting customers from the database
+ * and the Customer class.
+ *
+ * @author Elley Folks
+ */
 public class CustomerQuery {
 
+    /**
+     * Formats the TableView for displaying Customer data dynamically.
+     *
+     * @param tableView The TableView to be formatted.
+     */
     public static void formatCustomerTable(TableView<Customer> tableView) {
 
         // Get the list of all properties of the Appointment class using reflection
@@ -46,6 +54,12 @@ public class CustomerQuery {
         System.out.println("Table view created.");
     }
 
+    /**
+     * Retrieves all customer data from the database and populates the provided TableView.
+     *
+     * @param customers The ObservableList to store retrieved Customer objects.
+     * @param tableView The TableView to be populated with customer data.
+     */
     public static void getAllCustomers(ObservableList<Customer> customers, TableView<Customer> tableView) {
 
         String query = "SELECT * FROM customers AS c " +
@@ -93,6 +107,16 @@ public class CustomerQuery {
         }
     }
 
+    /**
+     * Creates a new customer in the database with the provided information.
+     *
+     * @param customerName The name of the customer.
+     * @param address      The address of the customer.
+     * @param postalCode   The postal code of the customer.
+     * @param phoneNumber  The phone number of the customer.
+     * @param divisionID   The division ID associated with the customer.
+     * @return True if the customer creation is successful, false otherwise.
+     */
     public static boolean createNewCustomer(String customerName, String address, String postalCode, String phoneNumber,
                                             Integer divisionID) {
 
@@ -134,6 +158,17 @@ public class CustomerQuery {
         return false;
     }
 
+    /**
+     * Modifies an existing customer entry in the database with the provided information.
+     *
+     * @param customerID   The ID of the customer to be modified.
+     * @param customerName The updated name of the customer.
+     * @param address      The updated address of the customer.
+     * @param postalCode   The updated postal code of the customer.
+     * @param phoneNumber  The updated phone number of the customer.
+     * @param divisionId   The updated division ID associated with the customer.
+     * @return True if the customer modification is successful, false otherwise.
+     */
     public static boolean modifyCustomer(Integer customerID, String customerName, String address, String postalCode,
                                          String phoneNumber, String divisionId) {
         String sqlQuery = "UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, " +
@@ -167,6 +202,12 @@ public class CustomerQuery {
         }
     }
 
+    /**
+     * Removes a customer from the database based on the given customer ID.
+     *
+     * @param columnId The ID of the customer to be removed.
+     * @return True if the removal is successful, false otherwise.
+     */
     public static boolean removeCustomer(int columnId) {
         String sqlQuery = "DELETE from customers WHERE Customer_ID=?";
 
@@ -191,6 +232,13 @@ public class CustomerQuery {
         }
     }
 
+    /**
+     * Retrieves country names and their corresponding IDs from the database
+     * and populates them into the provided ComboBox and map.
+     *
+     * @param comboBox         The ComboBox to be populated with country names.
+     * @param countryNameIdMap The map to store country names and their IDs.
+     */
     public static void getCountryNameID(ComboBox<String> comboBox, Map<String, Integer> countryNameIdMap) {
         ObservableList<String> countryNames = FXCollections.observableArrayList();
 
@@ -214,6 +262,14 @@ public class CustomerQuery {
         }
     }
 
+    /**
+     * Retrieves division names and their corresponding IDs from the database
+     * for a given country and populates them into the provided ComboBox and map.
+     *
+     * @param comboBox         The ComboBox to be populated with division names.
+     * @param countryNameIdMap The map containing country names and their IDs.
+     * @param countryID        The ID of the selected country.
+     */
     public static void getDivision(ComboBox<String> comboBox, Map<String, Integer> countryNameIdMap, Integer countryID) {
         ObservableList<String> divisionNames = FXCollections.observableArrayList();
 
@@ -238,6 +294,12 @@ public class CustomerQuery {
         }
     }
 
+    /**
+     * Checks if a customer has any associated appointments in the database.
+     *
+     * @param customerId The ID of the customer to check for appointments.
+     * @return True if the customer has appointments, false otherwise.
+     */
     public static boolean customerHasAppointment(Integer customerId) {
         String sqlQuery = "SELECT * FROM appointments " +
                 "AS a INNER JOIN contacts AS c ON a.Contact_ID = c.Contact_ID " +
@@ -255,7 +317,5 @@ public class CustomerQuery {
             return false;
         }
     }
-
-
 }
 

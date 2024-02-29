@@ -23,7 +23,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-
+/**
+ * Class that contains event handlers, controller methods,
+ * and logical implementation that will redirect the user to appropriate forms for adding appointments or customers,
+ * and selecting an appointment or customer to modify or delete.
+ *
+ * @author Elley Folks
+ */
 public class HomeController implements Initializable {
 
     @FXML
@@ -81,6 +87,13 @@ public class HomeController implements Initializable {
 
     private Map<String, Integer> countryNameIdMap = new HashMap<>();
 
+    /**
+     * Initializes the controller with the necessary setup for the main screen.
+     * Populates the customers and appointments tables, and sets default radio button selections.
+     * Also initializes the report combo box based on the selected report type.
+     *
+     * @throws RuntimeException if an exception occurs during initialization.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -107,6 +120,10 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Populates the appointments table based on the selected time range.
+     * Clears existing appointments and loads new ones accordingly.
+     */
     @FXML
     void populateAppointmentTable(){
         try{
@@ -133,6 +150,10 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Formats the report view based on the selected report type.
+     * Clears existing data and populates the report combo box with appropriate options.
+     */
     @FXML
     private void formatReport(){
 
@@ -172,6 +193,11 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Creates and displays the report based on the selected report type and options.
+     * Resets the table view, then formats and populates the view with the relevant data.
+     * Updates the report result label with the total number of records in the report.
+     */
     @FXML
     private void createReport(){
         if(appointmentTypeReport.isSelected() && reportComboBox.getValue() != null){
@@ -217,15 +243,28 @@ public class HomeController implements Initializable {
             AppointmentQuery.formatAppointmentTable(reportTableView);
             AppointmentQuery.getAppointmentsWithCountryID(reportTableView, countryNameIdMap.get(reportComboBox.getValue()));
         }
-
     }
 
+    /**
+     * Retrieves the selected appointment for modification.
+     *
+     * @return The appointment to be modified.
+     */
     @FXML
     public static Appointment getAppointmentToModify(){return appointmentToModify;}
 
+    /**
+     * Retrieves the selected customer for modification.
+     *
+     * @return The customer to be modified.
+     */
     @FXML
     public static Customer getCustomerToModify(){return customerToModify;}
 
+    /**
+     * Handles the action when the "Add Appointment" button is pressed.
+     * Sets the appointment to be modified to null (if selected) and switches to the appointment scene.
+     */
     @FXML
     void onAddAppointmentAction(){
         appointmentToModify = null;
@@ -237,6 +276,10 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the "Add Customer" button is pressed.
+     * Sets the customer to be modified to null (if selected) and switches to the customer scene.
+     */
     @FXML
     void onAddCustomerAction(){
         customerToModify = null;
@@ -248,6 +291,10 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the "Modify Appointment" button is pressed.
+     * Gets the selected appointment, sets it as the appointment to be modified, and switches to the appointment scene.
+     */
     @FXML
     void onModifyAppointmentAction(){
         // gets appointment selected by user (if any)
@@ -264,6 +311,10 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the "Modify Customer" button is pressed.
+     * Gets the selected customer, sets it as the customer to be modified, and switches to the customer scene.
+     */
     @FXML
     void onModifyCustomerAction(){
         // gets appointment selected by user (if any)
@@ -280,6 +331,13 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the "Remove Appointment" button is pressed.
+     * Retrieves the selected appointment, prompts the user for confirmation,
+     * and removes the appointment if the user confirms the deletion.
+     * Displays appropriate alerts for errors and successful deletions.
+     * Updates the appointments table after a successful deletion.
+     */
     @FXML
     void onRemoveAppointmentAction(){
         Appointment selectedAppointment = appointmentsTable.getSelectionModel().getSelectedItem();
@@ -307,6 +365,13 @@ public class HomeController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the "Remove Customer" button is pressed.
+     * Retrieves the selected customer, checks for associated appointments,
+     * prompts the user for confirmation, and removes the customer if the user confirms the deletion.
+     * Displays appropriate alerts for errors and successful deletions.
+     * Clears the observable list and updates the customers table after a successful deletion.
+     */
     @FXML
     void onRemoveCustomerAction() {
         Customer selectedCustomer = customersTable.getSelectionModel().getSelectedItem();
@@ -342,6 +407,13 @@ public class HomeController implements Initializable {
         }
 
 
+    /**
+     * Switches the application view to the Appointment Scene.
+     * Loads the AppointmentMenu.fxml file and sets it as the new scene for the primary stage.
+     * Hides the current stage, sets the new title, and shows the updated stage.
+     *
+     * @throws IOException if an error occurs during loading.
+     */
     @FXML
     void switchToAppointmentScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/AppointmentMenu.fxml"));
@@ -355,7 +427,13 @@ public class HomeController implements Initializable {
         stage.show();
     }
 
-
+    /**
+     * Switches the application view to the Customer Menu Scene.
+     * Loads the CustomerMenu.fxml file and sets it as the new scene for the primary stage.
+     * Hides the current stage, sets the new title, and shows the updated stage.
+     *
+     * @throws IOException if an error occurs during loading.
+     */
     @FXML
     void switchToCustomerScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/CustomerMenu.fxml"));

@@ -8,18 +8,42 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.Map;
 
+
+/**
+ * Class that contains quality of life sql queries that are widely usable.
+ * Contains functions to create / execute prepared statements, reformatting strings, and populating combo boxes.
+ * @author Elley Folks
+ */
 public class HelperQuery {
 
     private static PreparedStatement pStatement;
 
+    /**
+     * Creates a PreparedStatement using the provided SQL statement and the database connection.
+     *
+     * @param connection   The database connection.
+     * @param sqlStatement The SQL statement to be prepared.
+     * @throws SQLException If a database access error occurs.
+     */
     public static void createPreparedStatement(Connection connection, String sqlStatement) throws SQLException{
         pStatement = connection.prepareStatement(sqlStatement);
     }
 
+    /**
+     * Retrieves the previously created PreparedStatement.
+     *
+     * @return The PreparedStatement.
+     */
     public static PreparedStatement getPreparedStatement(){
         return pStatement;
     }
 
+    /**
+     * Formats column names by adding spaces between camel-case words and replacing "Id" with "ID".
+     *
+     * @param columnName The original column name.
+     * @return The formatted column name.
+     */
     public static String formatColumnNames(String columnName){
         // tests if string is empty
         if(columnName == null || columnName.isEmpty()){
@@ -43,15 +67,23 @@ public class HelperQuery {
         return formattedString.toString();
     }
 
+    /**
+     * Removes the prefix (class name) from a column name.
+     *
+     * @param columnName The original column name.
+     * @param className  The class name prefix.
+     * @return The column name without the prefix.
+     */
     public static String removeClassPrefix(String columnName, String className){
         String formattedName = columnName.replaceFirst(className,"");
         return formattedName;
     }
 
     /**
-     * Used to set values for a combo box of a menu based on a column from a database table.
-     * @param comboBox The specific fxml object that will have options populated.
-     * @param sqlQuery A query that selects a column from a table.
+     * Sets options for a ComboBox based on a column from a database table.
+     *
+     * @param comboBox The ComboBox to be populated.
+     * @param sqlQuery  A query that selects a column from a table.
      */
     public static void setComboBoxOptions(ComboBox<String> comboBox, String sqlQuery){
         ObservableList<String> boxItems = FXCollections.observableArrayList();
@@ -74,8 +106,9 @@ public class HelperQuery {
     }
 
     /**
-     * Populates combo boxes in report tab with appropriate options, based on which radio button is selected.
-     * @param comboBox
+     * Populates ComboBox options in the report tab based on the selected radio button.
+     *
+     * @param comboBox The ComboBox to be populated.
      */
     public static void setAppointmentTypes(ComboBox<String> comboBox){
         ObservableList<String> appointmentTypes = FXCollections.observableArrayList();
@@ -96,6 +129,12 @@ public class HelperQuery {
         }
     }
 
+    /**
+     * Sets options for ComboBox with appointment contacts based on the Contacts table in the database.
+     *
+     * @param comboBox    The ComboBox to be populated.
+     * @param namesToIds  A map to store contact names to their corresponding IDs.
+     */
     public static void setAppointmentContacts(ComboBox<String> comboBox, Map<String, Integer> namesToIds){
         ObservableList<String> appointmentContacts = FXCollections.observableArrayList();
 
@@ -119,6 +158,4 @@ public class HelperQuery {
             System.err.println("Could not get contact name: " + e.getMessage());
         }
     }
-
-
 }

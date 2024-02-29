@@ -15,6 +15,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import main.Main;
 import model.Appointment;
@@ -23,13 +27,40 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-public class LoginController implements Initializable {
+/** Tracks login attempts by locating file path of log file*/
+interface loginAttemptsRecord {
+    public String getLogFile();
+}
 
+/** Accesses language bundle and retrieves a specific translated message based on key.*/
+interface retrieveLanguageBundle{
+
+    public String getMsg(String key);
+}
+
+/**
+ * Class that contains event handlers, controller methods,
+ * and logical implementation for logging into the application.
+ *
+ * @author Elley Folks
+ */
+public class LoginController implements Initializable {
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("language/language", Locale.getDefault());
+
+    /** Lambda Expression for retrieving specific language message from language resource bundle */
+    retrieveLanguageBundle lang = (key) -> {
+        return resourceBundle.getString(key);
+    };
+
+    /** Lambda Expression for retrieving the login attempt file path */
+    loginAttemptsRecord trackLogin = () -> {
+        return "login_activity.txt";
+    };
 
     @FXML
     private Button logInBtn;
@@ -61,25 +92,41 @@ public class LoginController implements Initializable {
     @FXML
     private Text logInTimeZoneText;
 
+    /**
+     * Initializes the login screen, setting labels and text values based on the user's language preferences.
+     * Also prints a log message indicating the initialization of the login screen.
+     *
+     * @param url            The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         System.out.println("Login screen initialized");
 
-        resourceBundle = ResourceBundle.getBundle("language/language", Locale.getDefault());
-
-        logInBtn.setText(resourceBundle.getString("loginBtnLabel"));
-        logInHeaderText.setText(resourceBundle.getString("header"));
-        logInLocation.setText(resourceBundle.getString("country"));
-        logInLocationText.setText(resourceBundle.getString("locationText"));
-        logInPasswordText.setText(resourceBundle.getString("passwordText"));
-        logInUsernameText.setText(resourceBundle.getString("usernameText"));
+        logInBtn.setText(lang.getMsg("loginBtnLabel"));
+        logInHeaderText.setText(lang.getMsg("header"));
+        logInLocation.setText(lang.getMsg("country"));
+        logInLocationText.setText(lang.getMsg("locationText"));
+        logInPasswordText.setText(lang.getMsg("passwordText"));
+        logInUsernameText.setText(lang.getMsg("usernameText"));
         logInTimeZone.setText(String.valueOf(ZoneId.of(TimeZone.getDefault().getID())));
-        logInTimeZoneText.setText(resourceBundle.getString("timeZoneText"));
+        logInTimeZoneText.setText(lang.getMsg("timeZoneText"));
     }
 
+    /**
+     * Used when login button pressed on form.
+     * Validates user credentials, checks for appointments within the next 15 minutes,
+     * and transitions to the home screen upon successful login.
+     *
+     * @param event The action event triggered by the login button.
+     */
     @FXML
     void onLoginAction(ActionEvent event){
+
+        // generates log file to track login attempts
+        createLoginFile();
+
         // input validation
         if(isValidCredentials(logInUsernameField.getText(), logInPasswordField.getText())) {
 
@@ -114,10 +161,16 @@ public class LoginController implements Initializable {
                     } catch (Exception fxExeption) {
                         fxExeption.printStackTrace();
                     }
+
+                    // writes entry in log file for successful login
+                    writeToLoginFile("Login Successful");
+
                 } else{
                     // shows error if unsuccessful login
-                    System.out.println("Unsuccessful login.");
                     showAlertOnScreen("LoginUnsuccessful");
+
+                    // writes entry in log file for unsuccessful login
+                    writeToLoginFile("Login Unsuccessful");
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -125,6 +178,10 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Checks if there is an appointment scheduled within the next 15 minutes.
+     * @return The appointment object if one is found within the specified time frame, else returns null.
+     */
     public static Appointment appointmentWithin15min() {
         ObservableList<Appointment> appointments = AppointmentQuery.getAllAppointments();
         if (appointments != null) {
@@ -143,6 +200,15 @@ public class LoginController implements Initializable {
             return null;
         }
     }
+
+    /**
+     * Validates the provided username and password for login.
+     * Displays an appropriate alert if the username or password is empty based on the user's language preferences.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     * @return True if both username and password are non-empty; otherwise, false.
+     */
     private boolean isValidCredentials(String username, String password){
         if(username.isEmpty()){
             if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){
@@ -165,6 +231,51 @@ public class LoginController implements Initializable {
         return false;
     }
 
+    /**
+     * Creates a login log file if it doesn't exist and prints a message indicating the file's status.
+     * The log file is created at the location specified by the login tracker.
+     */
+    private void createLoginFile() {
+        try {
+            File loginRecords = new File(trackLogin.getLogFile());
+            if (loginRecords.createNewFile()) {
+                System.out.println("Created new log file: " + loginRecords.getName());
+            } else {
+                System.out.println("Located pre-existing log file: " + loginRecords.getPath());
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Writes login-related information to the login log file.
+     * Information includes the login status, username, password, and UTC timestamp.
+     * Appends the information to the existing log file.
+     *
+     * @param loginStatus The status of the login attempt (e.g., "Login Successful" or "Login Unsuccessful").
+     */
+    private void writeToLoginFile(String loginStatus){
+        try {
+            FileWriter fileWriter = new FileWriter(trackLogin.getLogFile(), true);
+            SimpleDateFormat formatDateTimeUtc = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            formatDateTimeUtc.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date userDateTime = new Date(System.currentTimeMillis());
+            String formattedDateUtc = formatDateTimeUtc.format(userDateTime);
+
+            fileWriter.write(loginStatus + "! Information: Username = "+ logInUsernameField.getText() +", Password = "+ logInPasswordField.getText()
+                    + ", UTC Timestamp = "+ formattedDateUtc + "\n");
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Displays an alert on the screen based on the provided alert string.
+     * @param alertString The string indicating the type of alert to display.
+     */
     void showAlertOnScreen(String alertString){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         switch (alertString){
@@ -186,6 +297,11 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Used to transition current scene back to home scene.
+     * Will load "Home.fxml" using FXMLLoader as the scene for the primary stage.
+     * @throws IOException Occurs if there is a problem locating or loading the fxml file.
+     */
     void changeToHome() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Home.fxml"));
         Scene scene = new Scene(fxmlLoader.load());

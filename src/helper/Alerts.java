@@ -5,8 +5,20 @@ import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
+/**
+ * Class that contains alert functions to warn and inform user about actions such as saving or canceling.
+ * Also gives useful error messages when invalid information is entered, or a selection is not made.
+ *
+ * @author Elley Folks
+ */
 public class Alerts {
 
+    /**
+     * Displays an error alert based on the given alert code and text field name.
+     *
+     * @param alertCode      The code specifying the type of error alert to be shown.
+     * @param textFieldName  The name of the text field associated with the error.
+     */
     public static void showErrorAlert(String alertCode, String textFieldName){
         Alert alert = new Alert(Alert.AlertType.ERROR);
 
@@ -106,6 +118,14 @@ public class Alerts {
         }
     }
 
+    /**
+     * Shows a confirmation alert based on the provided alert code and text field name.
+     *
+     * @param alertCode The code specifying the type of confirmation alert.
+     * @param textFieldName The name of the text field associated with the confirmation.
+     *
+     * @return An {@link Optional} containing the user's response (Yes/No) to the confirmation.
+     */
     public static Optional<ButtonType> showConfirmAlert(String alertCode, String textFieldName){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 
@@ -125,6 +145,14 @@ public class Alerts {
         return alert.showAndWait();
     }
 
+    /**
+     * Shows an information alert based on the provided alert code, text field name, and additional message.
+     *
+     * @param alertCode The code specifying the type of information alert.
+     * @param textFieldName The name of the text field associated with the information.
+     *
+     * @param message Additional message to be displayed in the alert.
+     */
     public static void showInfoAlert(String alertCode,String textFieldName, String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 

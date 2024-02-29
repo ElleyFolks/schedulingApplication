@@ -22,6 +22,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * Class that contains event handlers, controller methods,
+ * and logical implementation for validation and creating / updating / deleting customers.
+ *
+ * @author Elley Folks
+ */
 public class CustomerController  implements Initializable {
 
     @FXML
@@ -51,6 +57,14 @@ public class CustomerController  implements Initializable {
 
     Customer customerSelected = HomeController.getCustomerToModify();
 
+    /**
+     * Initializes customer FXML file.
+     * Initializes values in combo boxes for country and division.
+     * If modifying a customer, loads appropriate values into text fields.
+     *
+     * @param url Location of FXML file this controller controls behavior of, provided by FXMLLoader.
+     * @param resourceBundle Used for localization and resource loading, provided by FXMLLoader.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -72,6 +86,10 @@ public class CustomerController  implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when a country is selected in the country combo box.
+     * Retrieves and populates the division combo box based on the selected country.
+     */
     public void onCountrySelectAction(){
 
         String countryName = country.getSelectionModel().getSelectedItem();
@@ -79,6 +97,11 @@ public class CustomerController  implements Initializable {
         CustomerQuery.getDivision(division, divisionNameIdMap, countryId);
     }
 
+    /**
+     * Saves customer information entered in the form.
+     * If no customer is selected, will create a new record / row in database, and a new customer class object.
+     * If a customer is selected, will modify and update the information of the existing customer.
+     */
     @FXML
     void onSaveAction(){
         if(isValidCustomer()){
@@ -143,6 +166,12 @@ public class CustomerController  implements Initializable {
         }
     }
 
+    /**
+     * Checks if the customer information entered in the form is valid.
+     * Validates text fields and combo boxes for required information.
+     *
+     * @return true if customer information is valid, false otherwise.
+     */
     @FXML
     boolean isValidCustomer(){
         if(Validation.isEmptyString(customerName,"Customer name")){
@@ -168,6 +197,11 @@ public class CustomerController  implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the cancel button is pressed on the form.
+     * Shows a confirmation alert to the user, explaining that the entered information will not be saved.
+     * Changes the scene back to the home screen if the user confirms they want to cancel changes.
+     */
     @FXML
     void onCancelAction() {
         Optional<ButtonType> result = Alerts.showConfirmAlert("cancelConfirm", "");
@@ -181,6 +215,12 @@ public class CustomerController  implements Initializable {
         }
     }
 
+    /**
+     * Transitions the current scene back to the home scene.
+     * Loads "Home.fxml" using FXMLLoader as the scene for the primary stage.
+     *
+     * @throws IOException Occurs if there is a problem locating or loading the FXML file.
+     */
     @FXML
     void switchToHomeScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Home.fxml"));

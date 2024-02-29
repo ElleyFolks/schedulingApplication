@@ -19,16 +19,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+
+/**
+ * Class that contains event handlers, controller methods,
+ * and logical implementation for validation and creating / updating / deleting appointments.
+ *
+ * @author Elley Folks
+ */
 public class AppointmentController implements Initializable {
 
     @FXML
     private TextField appointmentId;
-
-    @FXML
-    private Button appointmentCancel;
-
-    @FXML
-    private Button appointmentSave;
 
     @FXML
     private DatePicker endDate;
@@ -79,6 +80,14 @@ public class AppointmentController implements Initializable {
 
     Appointment appointmentSelected = HomeController.getAppointmentToModify();
 
+    /**
+     * Initializes appointment fxml file.
+     * Initializes values in combo boxes for times and ID's.
+     * If modifying an appointment, loads appropriate values into text fields.
+     *
+     * @param url Location of fxml file this controller controls behavior of, provided by FXMLLoader.
+     * @param resourceBundle Used for localization and resource loading, provided by FXMLLoader.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -111,6 +120,9 @@ public class AppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Logic used to initialize options in time combo boxes, and ID combo boxes.
+     */
     void initializeComboBoxes(){
         // adds AM or PM options to time code combo box
         startTimeCode.getItems().add("AM");
@@ -151,6 +163,12 @@ public class AppointmentController implements Initializable {
         AppointmentQuery.getContactNameID(contactId, "SELECT Contact_Name, Contact_ID FROM contacts ORDER BY Contact_ID", nameIdMap);
     }
 
+    /**
+     * Used when save button is pressed on form.
+     * First checks information entered in text fields, and checks if combo boxes were selected.
+     * If no appointment is selected, will create a new record / row in database, and a new appointment class object.
+     * If an appointment is selected, will modify and update the information of the existing appointment.
+     */
     @FXML
     void onSaveAction(){
         if(isValidAppointment()) {
@@ -237,6 +255,14 @@ public class AppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Used to check information entered in form.
+     * Checks for empty text fields.
+     * Validates time selections, checks if in business hours, or if date is scheduled on weekend.
+     * Checks for overlapping appointments for the same customer.
+     *
+     * @return true if appointment is valid, false otherwise.
+     */
     boolean isValidAppointment(){
 
         // validation for text fields
@@ -336,6 +362,11 @@ public class AppointmentController implements Initializable {
         return true;
     }
 
+    /**
+     * Used when cancel button is pressed on form.
+     * Shows an alert to user explaining that information entered will not be saved.
+     * Changes scene back to home screen if user confirms they want to cancel changes.
+     */
     @FXML
     void onCancelAction() {
         Optional<ButtonType> result = Alerts.showConfirmAlert("cancelConfirm", "");
@@ -349,6 +380,12 @@ public class AppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Used to transition current scene back to home scene.
+     * Will load "Home.fxml" using FXMLLoader as the scene for the primary stage.
+     *
+     * @throws IOException Occurs if there is a problem locating or loading the fxml file.
+     */
     @FXML
     void switchToHomeScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Home.fxml"));

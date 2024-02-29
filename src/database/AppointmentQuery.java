@@ -17,8 +17,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+/**
+ * Class that contains sql queries logical implementation for creating / updating / deleting appointments from the database
+ * and the Application class.
+ *
+ * @author Elley Folks
+ */
 public class AppointmentQuery {
 
+    /**
+     * Dynamically creates and formats TableColumn instances for the TableView representing Appointment entities.
+     * Uses reflection to iterate over Appointment class fields and excludes those not meant for display.
+     *
+     * @param tableView The TableView to which the TableColumn instances will be added.
+     */
     public static void formatAppointmentTable(TableView<Appointment> tableView) {
 
         // Get the list of all properties of the Appointment class using reflection
@@ -47,7 +59,13 @@ public class AppointmentQuery {
         System.out.println("Table view created.");
     }
 
-
+    /**
+     * Retrieves all appointments from the database and populates the provided ObservableList and TableView.
+     * Executes a SQL query to join appointments with contacts and orders results by Appointment_ID.
+     *
+     * @param appointments The ObservableList to store Appointment entities.
+     * @param tableView The TableView to display Appointment entities.
+     */
     public static void getAllAppointments(ObservableList<Appointment> appointments, TableView<Appointment> tableView) {
         String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID ORDER BY a.Appointment_ID;";
 
@@ -91,10 +109,10 @@ public class AppointmentQuery {
     }
 
     /**
-     * Runs a select SQL command to get all appointments from DB. Stores this information in a class object
-     * for appointments.
-     * Sets table view
-     * @return
+     * Retrieves all appointments from the database and returns them as an ObservableList.
+     * Executes a SQL query to join appointments with contacts and orders results by Appointment_ID.
+     *
+     * @return ObservableList containing Appointment entities retrieved from the database.
      */
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -144,9 +162,16 @@ public class AppointmentQuery {
         return appointments;
     }
 
+    /**
+     * Retrieves appointments within a specified time interval of either a week or month from the current day
+     * and populates the provided TableView.
+     *
+     * @param appointments An ObservableList to store the retrieved appointments.
+     * @param tableView    The TableView to display the appointments.
+     * @param interval     The time interval for which appointments are to be retrieved ("week" or "month").
+     */
     public static void getRangeAppointments(ObservableList<Appointment> appointments,
-                                                                   TableView<Appointment> tableView, String interval) {
-        // TODO figure out if this needs to be converted?
+                                            TableView<Appointment> tableView, String interval) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:00");
         String currentDate = LocalDateTime.now().format(formatter);
         String selectedRange = null;
@@ -211,6 +236,12 @@ public class AppointmentQuery {
             }
     }
 
+    /**
+     * Retrieves appointments of a specific type and populates the provided TableView.
+     *
+     * @param tableView     The TableView to display the appointments.
+     * @param selectedType  The type of appointments to retrieve.
+     */
     public static void getAppointmentsOfType(TableView<Appointment> tableView, String selectedType) {
         String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c " +
                 "ON a.Contact_ID=c.Contact_ID WHERE Type=? ORDER BY a.Appointment_ID; ";
@@ -257,6 +288,12 @@ public class AppointmentQuery {
         }
     }
 
+    /**
+     * Retrieves appointments within a specific month and populates the provided TableView.
+     *
+     * @param tableView        The TableView to display the appointments.
+     * @param selectedMonth    The month for which appointments are to be retrieved (format: "MM").
+     */
     public static void getAppointmentsOfMonth(TableView<Appointment> tableView, String selectedMonth) {
         String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c " +
                 "ON a.Contact_ID=c.Contact_ID WHERE MONTH(Start)=? ORDER BY a.Appointment_ID; ";
@@ -305,10 +342,22 @@ public class AppointmentQuery {
         }
     }
 
-
+    /**
+     * Creates a new appointment in the database with the provided details.
+     *
+     * @param title         The title of the appointment.
+     * @param description   The description of the appointment.
+     * @param location      The location of the appointment.
+     * @param type          The type of the appointment.
+     * @param start         The start date time of the appointment.
+     * @param end           The end date time of the appointment.
+     * @param contactID     The ID of the contact associated with the appointment.
+     * @param customerId    The ID of the customer associated with the appointment.
+     * @param userID        The ID of the user associated with the appointment.
+     * @return              True if the appointment is created successfully, false otherwise.
+     */
     public static boolean createNewAppointment(String title, String description, String location, String type, String start,
                                                String end, String contactID, String customerId, String userID){
-
 
         String sqlString = "INSERT INTO appointments(Title, Description, Location, Type, Start, " +
                 "End, Customer_ID, Contact_ID, User_ID) " +
@@ -352,6 +401,21 @@ public class AppointmentQuery {
         return false;
     }
 
+    /**
+     * Modifies an existing appointment in the database with the provided details.
+     *
+     * @param appointmentId The ID of the appointment to be modified.
+     * @param title         The new title of the appointment.
+     * @param description   The new description of the appointment.
+     * @param location      The new location of the appointment.
+     * @param type          The new type of the appointment.
+     * @param startTime     The new start time of the appointment.
+     * @param endTime       The new end time of the appointment.
+     * @param customerId    The new ID of the customer associated with the appointment.
+     * @param userId        The new ID of the user associated with the appointment.
+     * @param contactId     The new ID of the contact associated with the appointment.
+     * @return              True if the appointment is modified successfully, false otherwise.
+     */
     public static boolean modifyAppointment(String appointmentId, String title, String description, String location,
                                             String type, String startTime, String endTime, String customerId,
                                             String userId, String contactId) {
@@ -391,12 +455,18 @@ public class AppointmentQuery {
         }
     }
 
-    public static boolean removeAppointment(int columnId){
+    /**
+     * Removes an appointment from the database based on the provided Appointment ID.
+     *
+     * @param appointmentId The ID of the appointment to be removed.
+     * @return True if the appointment was successfully removed, false otherwise.
+     */
+    public static boolean removeAppointment(int appointmentId){
         String sqlQuery = "DELETE from appointments WHERE Appointment_Id=?";
 
         try {
             PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sqlQuery);
-            preparedStatement.setObject(1, columnId);
+            preparedStatement.setObject(1, appointmentId);
             try {
                 Integer numberRowsChanged = preparedStatement.executeUpdate();
                 if (numberRowsChanged != null && preparedStatement.getUpdateCount() > 0) {
@@ -415,6 +485,14 @@ public class AppointmentQuery {
         }
     }
 
+    /**
+     * Retrieves a list of appointments associated with a specific customer ID from the database.
+     *
+     * @param customerID The ID of the customer for whom to retrieve appointments.
+     *
+     * @return An ObservableList containing the appointments associated with the specified customer.
+     *         Returns null in case of an error.
+     */
     public static ObservableList<Appointment> getAppointmentsWithCustomerID(int customerID) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -458,6 +536,12 @@ public class AppointmentQuery {
         return appointments;
     }
 
+    /**
+     * Retrieves appointments associated with a specific contact ID and populates a TableView with the results.
+     *
+     * @param tableView The TableView to be populated with appointment data.
+     * @param contactID The ID of the contact for whom to retrieve appointments.
+     */
     public static void getAppointmentsWithContactID(TableView<Appointment> tableView, Integer contactID) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -503,6 +587,12 @@ public class AppointmentQuery {
         }
     }
 
+    /**
+     * Retrieves appointments associated with a specific country ID and populates a TableView.
+     *
+     * @param tableView The TableView to be populated with appointment data.
+     * @param countryID The ID of the country for which appointments are retrieved.
+     */
     public static void getAppointmentsWithCountryID(TableView<Appointment> tableView, Integer countryID) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -551,6 +641,13 @@ public class AppointmentQuery {
         }
     }
 
+    /**
+     * Populates a ComboBox with contact names and builds a mapping of names to their corresponding IDs.
+     *
+     * @param comboBox   The ComboBox to be populated with contact names.
+     * @param query      The SQL query to retrieve contact names and IDs.
+     * @param nameIdMap  A Map to store the mapping of contact names to their corresponding IDs.
+     */
     public static void getContactNameID(ComboBox<String> comboBox, String query, Map<String, Integer> nameIdMap) {
         ObservableList<String> items = FXCollections.observableArrayList();
 
