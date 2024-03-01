@@ -35,7 +35,6 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load());// scene
 
         primaryStage = stage;
-        //stage.setTitle("Scheduling Application");
         stage.setScene(scene);
         stage.show();
     }

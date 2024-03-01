@@ -32,17 +32,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-/** Tracks login attempts by locating file path of log file*/
-interface loginAttemptsRecord {
-    public String getLogFile();
-}
-
-/** Accesses language bundle and retrieves a specific translated message based on key.*/
-interface retrieveLanguageBundle{
-
-    public String getMsg(String key);
-}
-
 /**
  * Class that contains event handlers, controller methods,
  * and logical implementation for logging into the application.
@@ -60,12 +49,23 @@ interface retrieveLanguageBundle{
 public class LoginController implements Initializable {
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("language/language", Locale.getDefault());
 
+    /** Accesses language bundle and retrieves a specific translated message based on key.*/
+    public interface retrieveLanguageBundle{
+
+        public String getMsg(String key);
+    }
+
     /**
      * Lambda Expression for retrieving specific language message from language resource bundle.
      */
     retrieveLanguageBundle language = (key) -> {
         return resourceBundle.getString(key);
     };
+
+    /** Tracks login attempts by locating file path of log file*/
+    public interface loginAttemptsRecord {
+        public String getLogFile();
+    }
 
     /**
      * Lambda Expression for retrieving the login attempt file path.

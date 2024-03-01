@@ -242,6 +242,8 @@ public class HomeController implements Initializable {
             // formats and populates view with appointments of selected month
             AppointmentQuery.formatAppointmentTable(reportTableView);
             AppointmentQuery.getAppointmentsWithCountryID(reportTableView, countryNameIdMap.get(reportComboBox.getValue()));
+            reportResultLabel.setText("Total number of appointments for country "+ reportComboBox.getValue()
+                    + " is " + reportTableView.getItems().size());
         }
     }
 
