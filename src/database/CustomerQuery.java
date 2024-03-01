@@ -28,15 +28,11 @@ public class CustomerQuery {
      * @param tableView The TableView to be formatted.
      */
     public static void formatCustomerTable(TableView<Customer> tableView) {
-
-        // Get the list of all properties of the Appointment class using reflection
         Class<Customer> customerClass = Customer.class;
         Field[] fields = customerClass.getDeclaredFields();
 
         for (Field field : fields) {
-            // Exclude fields that should not be displayed in the TableView
             if (!field.getName().equals("serialVersionUID")) {
-                // Create TableColumn dynamically
                 String columnName = HelperQuery.formatColumnNames(field.getName());
                 TableColumn<Customer, Object> column = new TableColumn<>(HelperQuery.removeClassPrefix(columnName, "Customer"));
                 column.setCellValueFactory(data -> {

@@ -102,10 +102,10 @@ public class Alerts {
                 alert.showAndWait();
                 break;
 
-            case "overlappingAppointment":
+            case "conflictingAppointment":
                 alert.setTitle("Scheduling error.");
-                alert.setHeaderText("Overlapping appointments detected.");
-                alert.setContentText("Overlapping "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" at a different time.");
+                alert.setHeaderText("Conflicting appointments detected.");
+                alert.setContentText("Conflicting "+textFieldName+" scheduled. Please select a(n) "+textFieldName+" at a different time.");
                 alert.showAndWait();
                 break;
 

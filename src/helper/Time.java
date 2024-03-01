@@ -19,7 +19,7 @@ public class Time {
      *
      * @return A {@link LocalDateTime} object in 24-hour format.
      */
-    public static LocalDateTime localTo24DateTime(String dateTime){
+    public static LocalDateTime dateTimeLocalTo24(String dateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime,formatter);
 
@@ -38,7 +38,7 @@ public class Time {
      *
      * @return A string representation of the time in "yyyy-MM-dd HH:mm:ss" 24-hour format.
      */
-    public static String localTo24String(String dateTime){
+    public static String localToMilitaryString(String dateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime,formatter);
 
@@ -59,7 +59,7 @@ public class Time {
      *
      * @return The opening time of the business in the user's local time.
      */
-    public static LocalDateTime getBusinessOpenInLocal(LocalDateTime startTime){
+    public static LocalDateTime businessStartInLocal(LocalDateTime startTime){
         LocalDateTime estOpenTime = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 8, 0);
         ZoneId estZoneId = ZoneId.of("America/New_York");
         ZonedDateTime estZonedDateOpenTime = ZonedDateTime.of(estOpenTime, estZoneId);
@@ -74,7 +74,7 @@ public class Time {
      *
      * @return The closing time of the business in the user's local time.
      */
-    public static LocalDateTime getBusinessCloseInLocal(LocalDateTime endTime){
+    public static LocalDateTime businessEndInLocal(LocalDateTime endTime){
         LocalDateTime estCloseTime = LocalDateTime.of(endTime.getYear(), endTime.getMonth(), endTime.getDayOfMonth(), 22, 0);
         ZoneId estZoneId = ZoneId.of("America/New_York");
         ZonedDateTime estZonedDateCloseTime = ZonedDateTime.of(estCloseTime, estZoneId);

@@ -144,8 +144,8 @@ public class Validation {
      * @return           True if the appointment time is outside business hours or on a weekend, false otherwise.
      */
     public static boolean dateIsOutsideBusinessHours(LocalDateTime startTime, LocalDateTime endTime){
-        LocalDateTime businessStartTime = Time.getBusinessOpenInLocal(startTime);
-        LocalDateTime businessCloseTime = Time.getBusinessCloseInLocal(endTime);
+        LocalDateTime businessStartTime = Time.businessStartInLocal(startTime);
+        LocalDateTime businessCloseTime = Time.businessEndInLocal(endTime);
 
         if(startTime.isBefore(businessStartTime) || endTime.isAfter(businessCloseTime)){
             Alerts.showErrorAlert("notInBusinessHours", "time");
@@ -161,16 +161,16 @@ public class Validation {
     }
 
     /**
-     * Checks for overlapping appointments when adding a new appointment.
+     * Checks for conflicting appointments when adding a new appointment.
      *
      * @param newStartDate The start date and time of the new appointment.
      * @param newEndDate The end date and time of the new appointment.
      * @param cusID The customer ID associated with the appointment.
      *
-     * @return True if there is an overlapping appointment, false otherwise.
+     * @return True if there is a conflicting appointment, false otherwise.
      */
-    public static boolean overlappingAppointment(LocalDateTime newStartDate, LocalDateTime newEndDate, int cusID){
-        ObservableList<Appointment> appointments = AppointmentQuery.getAppointmentsWithCustomerID(cusID);
+    public static boolean conflictingAppointment(LocalDateTime newStartDate, LocalDateTime newEndDate, int cusID){
+        ObservableList<Appointment> appointments = AppointmentQuery.getAppointmentsOfCustomerID(cusID);
         if(appointments != null){
             for(Appointment existingAppointment: appointments){
                 System.out.println("\n"+newStartDate);
@@ -178,39 +178,39 @@ public class Validation {
                 System.out.println(existingAppointment.getStartDateTime());
                 System.out.println(existingAppointment.getEndDateTime());
                 if(existingAppointment.getStartDateTime().isAfter(newStartDate) && existingAppointment.getStartDateTime().isBefore(newEndDate)){
-                    System.out.println("Overlapping appointment found!");
-                    Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                    System.out.println("Conflicting appointment found!");
+                    Alerts.showErrorAlert("conflictingAppointment", "time or date");
                     return true;
                 } else if (newStartDate.isAfter(existingAppointment.getStartDateTime()) && newStartDate.isBefore(existingAppointment.getEndDateTime())){
-                    System.out.println("Overlapping appointment found!");
-                    Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                    System.out.println("Conflicting appointment found!");
+                    Alerts.showErrorAlert("conflictingAppointment", "time or date");
                     return true;
                 } else if (newStartDate.equals(existingAppointment.getStartDateTime()) || newEndDate.equals(existingAppointment.getEndDateTime())) {
-                    System.out.println("Overlapping appointment found!");
-                    Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                    System.out.println("Conflicting appointment found!");
+                    Alerts.showErrorAlert("conflictingAppointment", "time or date");
                     return true;
                 }
             }
         }
         else{
-            System.out.println("Failed to find user appointments.");
+            System.out.println("Failed to retrieve appointments!");
             return false;
         }
         return false;
     }
 
     /**
-     * Checks for overlapping appointments when modifying an existing appointment.
+     * Checks for conflicting appointments when modifying an existing appointment.
      *
      * @param newStartDate The start date and time of the modified appointment.
      * @param newEndDate The end date and time of the modified appointment.
      * @param cusID The customer ID associated with the appointment.
      * @param appointmentID The ID of the appointment being modified.
-     * @return True if there is an overlapping appointment, false otherwise.
+     * @return True if there is a conflicting appointment, false otherwise.
      */
-    public static boolean overlappingAppointment(LocalDateTime newStartDate, LocalDateTime newEndDate, int cusID,
+    public static boolean conflictingAppointment(LocalDateTime newStartDate, LocalDateTime newEndDate, int cusID,
                                                  int appointmentID){
-        ObservableList<Appointment> appointments = AppointmentQuery.getAppointmentsWithCustomerID(cusID);
+        ObservableList<Appointment> appointments = AppointmentQuery.getAppointmentsOfCustomerID(cusID);
         if(appointments != null){
             for(Appointment existingAppointment: appointments){
                 System.out.println("\n"+newStartDate);
@@ -219,23 +219,23 @@ public class Validation {
                 System.out.println(existingAppointment.getEndDateTime());
                 if(appointmentID != existingAppointment.getAppointmentId()){
                     if(existingAppointment.getStartDateTime().isAfter(newStartDate) && existingAppointment.getStartDateTime().isBefore(newEndDate)){
-                        System.out.println("Overlapping appointment found!");
-                        Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                        System.out.println("Conflicting appointment found!");
+                        Alerts.showErrorAlert("conflictingAppointment", "time or date");
                         return true;
                     } else if (newStartDate.isAfter(existingAppointment.getStartDateTime()) && newStartDate.isBefore(existingAppointment.getEndDateTime())){
-                        System.out.println("Overlapping appointment found!");
-                        Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                        System.out.println("Conflicting appointment found!");
+                        Alerts.showErrorAlert("conflictingAppointment", "time or date");
                         return true;
                     } else if (newStartDate.equals(existingAppointment.getStartDateTime()) || newEndDate.equals(existingAppointment.getAppointmentId())) {
-                        System.out.println("Overlapping appointment found!");
-                        Alerts.showErrorAlert("overlappingAppointment", "time or date");
+                        System.out.println("Conflicting appointment found!");
+                        Alerts.showErrorAlert("conflictingAppointment", "time or date");
                         return true;
                     }
                 }
             }
         }
         else{
-            System.out.println("Failed to find user appointments.");
+            System.out.println("Failed to retrieve appointments!");
             return false;
         }
         return false;

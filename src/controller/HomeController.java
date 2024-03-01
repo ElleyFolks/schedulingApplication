@@ -230,7 +230,7 @@ public class HomeController implements Initializable {
 
             // formats and populates view with appointments of selected month
             AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsWithContactID(reportTableView, contactNameIdMap.get(reportComboBox.getValue()));
+            AppointmentQuery.getAppointmentsOfContactID(reportTableView, contactNameIdMap.get(reportComboBox.getValue()));
             reportResultLabel.setText("Total number of appointments for contact "+ reportComboBox.getValue()
             + " is " + reportTableView.getItems().size());
         }

@@ -47,18 +47,30 @@ interface retrieveLanguageBundle{
  * Class that contains event handlers, controller methods,
  * and logical implementation for logging into the application.
  *
+ * LAMBDA EXPRESSION - Contains a lambda expression for retrieving a specific resource from the language resource bundle.
+ * It is used for the logic that translates the login screen to English or French.
+ *
+ * LAMBDA EXPRESSION - Contains a lambda expression for passing in the login_activity.txt filename to
+ * functions implementing logging (reading and writing).
+ *
+ * JUSTIFICATION - Improves readability by providing quicker, shorter and more efficient code.
+ *
  * @author Elley Folks
  */
 public class LoginController implements Initializable {
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("language/language", Locale.getDefault());
 
-    /** Lambda Expression for retrieving specific language message from language resource bundle */
-    retrieveLanguageBundle lang = (key) -> {
+    /**
+     * Lambda Expression for retrieving specific language message from language resource bundle.
+     */
+    retrieveLanguageBundle language = (key) -> {
         return resourceBundle.getString(key);
     };
 
-    /** Lambda Expression for retrieving the login attempt file path */
-    loginAttemptsRecord trackLogin = () -> {
+    /**
+     * Lambda Expression for retrieving the login attempt file path.
+     */
+    loginAttemptsRecord loginTracker = () -> {
         return "login_activity.txt";
     };
 
@@ -104,14 +116,14 @@ public class LoginController implements Initializable {
 
         System.out.println("Login screen initialized");
 
-        logInBtn.setText(lang.getMsg("loginBtnLabel"));
-        logInHeaderText.setText(lang.getMsg("header"));
-        logInLocation.setText(lang.getMsg("country"));
-        logInLocationText.setText(lang.getMsg("locationText"));
-        logInPasswordText.setText(lang.getMsg("passwordText"));
-        logInUsernameText.setText(lang.getMsg("usernameText"));
+        logInBtn.setText(language.getMsg("loginBtnLabel"));
+        logInHeaderText.setText(language.getMsg("header"));
+        logInLocation.setText(language.getMsg("country"));
+        logInLocationText.setText(language.getMsg("locationText"));
+        logInPasswordText.setText(language.getMsg("passwordText"));
+        logInUsernameText.setText(language.getMsg("usernameText"));
         logInTimeZone.setText(String.valueOf(ZoneId.of(TimeZone.getDefault().getID())));
-        logInTimeZoneText.setText(lang.getMsg("timeZoneText"));
+        logInTimeZoneText.setText(language.getMsg("timeZoneText"));
     }
 
     /**
@@ -140,7 +152,7 @@ public class LoginController implements Initializable {
                     // switching to home screen on successful login
                     try {
                         changeToHome();
-                        Appointment appointment = appointmentWithin15min();
+                        Appointment appointment = checkAppointmentsIn15min();
                         if(appointment != null){
                             System.out.println("Appointment within 15 minutes of logging in!");
 
@@ -179,24 +191,22 @@ public class LoginController implements Initializable {
     }
 
     /**
-     * Checks if there is an appointment scheduled within the next 15 minutes.
+     * Verifies if an appointment is scheduled within the upcoming 15 minutes.
      * @return The appointment object if one is found within the specified time frame, else returns null.
      */
-    public static Appointment appointmentWithin15min() {
+    public static Appointment checkAppointmentsIn15min() {
         ObservableList<Appointment> appointments = AppointmentQuery.getAllAppointments();
         if (appointments != null) {
             for (Appointment existingAppointment : appointments) {
-                //System.out.println("\n"+LocalDateTime.now());
-                //System.out.println(existingAppointment.getEventStart());
-                Duration duration = Duration.between(LocalDateTime.now(), existingAppointment.getStartDateTime());
+                Duration timeDelta = Duration.between(LocalDateTime.now(), existingAppointment.getStartDateTime());
 
-                if (Math.abs(duration.toMinutes()) <= 15) {
+                if (Math.abs(timeDelta.toMinutes()) <= 15) {
                     return existingAppointment;
                 }
             }
             return null;
         } else {
-            System.out.println("Failed to find user appointments.");
+            System.out.println("Failed to get appointments!");
             return null;
         }
     }
@@ -237,7 +247,7 @@ public class LoginController implements Initializable {
      */
     private void createLoginFile() {
         try {
-            File loginRecords = new File(trackLogin.getLogFile());
+            File loginRecords = new File(loginTracker.getLogFile());
             if (loginRecords.createNewFile()) {
                 System.out.println("Created new log file: " + loginRecords.getName());
             } else {
@@ -257,7 +267,7 @@ public class LoginController implements Initializable {
      */
     private void writeToLoginFile(String loginStatus){
         try {
-            FileWriter fileWriter = new FileWriter(trackLogin.getLogFile(), true);
+            FileWriter fileWriter = new FileWriter(loginTracker.getLogFile(), true);
             SimpleDateFormat formatDateTimeUtc = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             formatDateTimeUtc.setTimeZone(TimeZone.getTimeZone("UTC"));
 

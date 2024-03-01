@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+// This is for my locally hosted database setup
 public class DatabaseConfig {
     private static final String CONFIG_FILE = "C:\\Users\\elley\\Desktop\\C195 Project\\dbConfig\\config.properties";
     private static Properties properties = new Properties();

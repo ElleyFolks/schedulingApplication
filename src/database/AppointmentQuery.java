@@ -33,14 +33,11 @@ public class AppointmentQuery {
      */
     public static void formatAppointmentTable(TableView<Appointment> tableView) {
 
-        // Get the list of all properties of the Appointment class using reflection
         Class<Appointment> appointmentClass = Appointment.class;
         Field[] fields = appointmentClass.getDeclaredFields();
 
         for (Field field : fields) {
-            // Exclude fields that should not be displayed in the TableView
             if (!field.getName().equals("serialVersionUID")) {
-                // Create TableColumn dynamically
                 String columnName = HelperQuery.formatColumnNames(field.getName());
                 TableColumn<Appointment, Object> column = new TableColumn<>(HelperQuery.formatColumnNames(HelperQuery.removeClassPrefix(columnName, "Appointment")));
                 column.setCellValueFactory(data -> {
@@ -60,7 +57,8 @@ public class AppointmentQuery {
     }
 
     /**
-     * Retrieves all appointments from the database and populates the provided ObservableList and TableView.
+     * Retrieves all appointments from the database.
+     * Populates the provided ObservableList and TableView.
      * Executes a SQL query to join appointments with contacts and orders results by Appointment_ID.
      *
      * @param appointments The ObservableList to store Appointment entities.
@@ -493,7 +491,7 @@ public class AppointmentQuery {
      * @return An ObservableList containing the appointments associated with the specified customer.
      *         Returns null in case of an error.
      */
-    public static ObservableList<Appointment> getAppointmentsWithCustomerID(int customerID) {
+    public static ObservableList<Appointment> getAppointmentsOfCustomerID(int customerID) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
         String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
@@ -542,7 +540,7 @@ public class AppointmentQuery {
      * @param tableView The TableView to be populated with appointment data.
      * @param contactID The ID of the contact for whom to retrieve appointments.
      */
-    public static void getAppointmentsWithContactID(TableView<Appointment> tableView, Integer contactID) {
+    public static void getAppointmentsOfContactID(TableView<Appointment> tableView, Integer contactID) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
         String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +

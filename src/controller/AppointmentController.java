@@ -189,8 +189,8 @@ public class AppointmentController implements Initializable {
                         + endTimeCode.getValue();
 
                 // converting local time to military
-                String militaryStartDateTime = helper.Time.localTo24String(startDateTimeStr);
-                String militaryEndDateTime = helper.Time.localTo24String(endDateTimeStr);
+                String militaryStartDateTime = helper.Time.localToMilitaryString(startDateTimeStr);
+                String militaryEndDateTime = helper.Time.localToMilitaryString(endDateTimeStr);
 
                 // adds new appointment if none selected
                 if (appointmentSelected == null) {
@@ -317,8 +317,8 @@ public class AppointmentController implements Initializable {
         String endDateTimeStr = endDate.getValue() + " " + endHour.getValue() + ":" + endMinute.getValue()
                 + endTimeCode.getValue();
 
-        LocalDateTime militaryStartDateTime = helper.Time.localTo24DateTime(startDateTimeStr);
-        LocalDateTime militaryEndDateTime = helper.Time.localTo24DateTime(endDateTimeStr);
+        LocalDateTime militaryStartDateTime = helper.Time.dateTimeLocalTo24(startDateTimeStr);
+        LocalDateTime militaryEndDateTime = helper.Time.dateTimeLocalTo24(endDateTimeStr);
 
         // checks if date is on weekend
         if(Validation.dateIsOutsideBusinessHours(militaryStartDateTime, militaryEndDateTime)){
@@ -345,7 +345,7 @@ public class AppointmentController implements Initializable {
 
         // checking for overlapping appointments if modifying an existing appointment
         if(appointmentSelected != null){
-            if(Validation.overlappingAppointment(militaryStartDateTime,
+            if(Validation.conflictingAppointment(militaryStartDateTime,
                     militaryEndDateTime,
                     Integer.parseInt(customerId.getValue()),
                     appointmentSelected.getAppointmentId())){
@@ -353,7 +353,7 @@ public class AppointmentController implements Initializable {
         }
         // checking for overlapping appointments when creating a new appointment
         else{
-            if(Validation.overlappingAppointment(militaryStartDateTime,
+            if(Validation.conflictingAppointment(militaryStartDateTime,
                     militaryEndDateTime,
                     Integer.parseInt(customerId.getValue()))){
                 return false;}
