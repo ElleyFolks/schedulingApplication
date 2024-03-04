@@ -8,12 +8,8 @@ public class JDBC {
     private static final String protocol = "jdbc";
     private static final String vendorName = ":mysql";
 
-    private static final String location = "//localhost/";
-
-    // WGU Database - Dear EVALUATOR, please fill out this information below for your connection. Thanks!
-    private static final String ipAddress = "://wgudb.ucertify.com:3306/";
-
-    private static final String dbName = "WJ06YG0";// name of DB
+    static final String ipAddress = "://127.0.0.1/";
+    private static final String dbName = "client_schedule";
     private static final String username = "sqlUser";
     private static final String password = "Passw0rd!";
 
@@ -25,7 +21,7 @@ public class JDBC {
 
 
     //private static final String jdbcURL = protocol + vendorName + ipAddress + dbName + "?connectionTimeZone=SERVER"; // used for personal set up
-    private static final String jdbcURL = protocol + vendorName + location + ipAddress + dbName + "?connectionTimeZone=SERVER";
+    private static final String jdbcURL = protocol + vendorName + ipAddress + dbName + "?connectionTimeZone=SERVER";
     private static final String MYSQLJDBCDriver = "com.mysql.cj.jdbc.Driver";
     private static Connection conn = null;
 
