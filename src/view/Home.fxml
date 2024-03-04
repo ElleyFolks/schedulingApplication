@@ -110,18 +110,13 @@
                                        <children>
                                           <VBox spacing="10.0">
                                              <children>
-                                                        <RadioButton fx:id="appointmentTypeReport" mnemonicParsing="false" onAction="#formatReport" text="Appointments of Type">
+                                                        <RadioButton fx:id="appointmentMonthTypeReport" mnemonicParsing="false" onAction="#formatReport" text="By Type and Month">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
                                                    <toggleGroup>
                                                                 <ToggleGroup fx:id="reports" />
                                                    </toggleGroup>
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                        </RadioButton>
-                                                        <RadioButton fx:id="appointmentMonthReport" mnemonicParsing="false" onAction="#formatReport" text="Appointments in Month" toggleGroup="$reports">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
                                                 </RadioButton>
                                                         <RadioButton fx:id="appointmentContactReport" mnemonicParsing="false" onAction="#formatReport" text="Contact Schedule" toggleGroup="$reports">
                                                    <font>
@@ -135,14 +130,14 @@
                                                 </RadioButton>
                                              </children>
                                           </VBox>
-                                          <VBox spacing="10.0">
+                                          <VBox fx:id="comboBoxVBox" spacing="10.0">
                                              <children>
                                                       <Label fx:id="reportComboBoxLabel" text="Combo Label">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
                                                 </Label>
-                                                      <ComboBox fx:id="reportComboBox" onAction="#createReport" prefWidth="150.0" />
+                                                      <ComboBox fx:id="reportComboBox" onAction="#createReport" prefWidth="150.0" promptText="select month" />
                                              </children>
                                           </VBox>
                                        </children>

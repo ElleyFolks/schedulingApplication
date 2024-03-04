@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.Main;
 import model.Appointment;
@@ -51,10 +52,7 @@ public class HomeController implements Initializable {
     private RadioButton appointmentContactReport;
 
     @FXML
-    private RadioButton appointmentMonthReport;
-
-    @FXML
-    private RadioButton appointmentTypeReport;
+    private RadioButton appointmentMonthTypeReport;
 
     @FXML
     private RadioButton appointmentCountryReport;
@@ -80,6 +78,12 @@ public class HomeController implements Initializable {
 
     @FXML
     private TableView<Appointment> reportTableView;
+
+    @FXML
+    private VBox comboBoxVBox;
+
+    @FXML
+    private ComboBox<String> selectTypeComboBox;
 
     private Map<String, Integer> contactNameIdMap = new HashMap<>();
 
@@ -112,7 +116,7 @@ public class HomeController implements Initializable {
             populateAppointmentTable();
 
             // appointments by type selected by default
-            appointmentTypeReport.setSelected(true);
+            appointmentMonthTypeReport.setSelected(true);
             formatReport();
 
         } catch (Exception e) {
@@ -163,15 +167,9 @@ public class HomeController implements Initializable {
         reportComboBox.getItems().clear();
         reportResultLabel.setText("");
 
-        // populates reports combo box with appointment types
-        if(appointmentTypeReport.isSelected()){
-            reportComboBoxLabel.setText("Select type for report.");
-            HelperQuery.setAppointmentTypes(reportComboBox);
-        }
-
         // populates reports combo box with months
-        if(appointmentMonthReport.isSelected()){
-            reportComboBoxLabel.setText("Select appointment month.");
+        if(appointmentMonthTypeReport.isSelected()){
+            reportComboBoxLabel.setText("Select appointment month and type.");
             for (int i = 1; i <= 12; i++) {
                 if(i<10){
                     reportComboBox.getItems().add("0"+String.valueOf(i));
@@ -179,18 +177,39 @@ public class HomeController implements Initializable {
                     reportComboBox.getItems().add(String.valueOf(i));
                 }
             }
+            createTypeComboBox();
+            // populates combo box with appointment types
+            HelperQuery.setAppointmentTypes(selectTypeComboBox);
         }
 
         // populates report combo box with contact names
         if(appointmentContactReport.isSelected()){
+            removeExtraComboBox(selectTypeComboBox);
             reportComboBoxLabel.setText("Select contact.");
             HelperQuery.setAppointmentContacts(reportComboBox, contactNameIdMap);
         }
 
         if(appointmentCountryReport.isSelected()){
+            removeExtraComboBox(selectTypeComboBox);
             reportComboBoxLabel.setText("Select country.");
             CustomerQuery.getCountryNameID(reportComboBox,countryNameIdMap);
         }
+    }
+
+    private void createTypeComboBox() {
+        // Create the ComboBox and add options if needed
+        selectTypeComboBox = new ComboBox<>();
+        selectTypeComboBox.setPromptText("select type");
+        selectTypeComboBox.setOnAction(event -> createReport());
+        selectTypeComboBox.getItems().addAll("Option 1", "Option 2", "Option 3");
+
+        // Add the ComboBox to the container
+        comboBoxVBox.getChildren().add(selectTypeComboBox);
+    }
+
+    private void removeExtraComboBox(ComboBox<?> comboBox) {
+        // Remove the ComboBox from the container
+        comboBoxVBox.getChildren().remove(comboBox);
     }
 
     /**
@@ -200,6 +219,7 @@ public class HomeController implements Initializable {
      */
     @FXML
     private void createReport(){
+        /*
         if(appointmentTypeReport.isSelected() && reportComboBox.getValue() != null){
             // resets table view
             reportTableView.getItems().clear();
@@ -223,6 +243,34 @@ public class HomeController implements Initializable {
             reportResultLabel.setText("Total number of appointments in the month of "+ reportComboBox.getValue()
                     + " is "+ reportTableView.getItems().size());
         }
+         */
+
+
+        if(appointmentMonthTypeReport.isSelected() && reportComboBox.getValue() != null){
+            // resets table view
+            reportTableView.getItems().clear();
+            reportTableView.getColumns().clear();
+
+            // formats and populates view with appointments of selected month
+            AppointmentQuery.formatAppointmentTable(reportTableView);
+            AppointmentQuery.getAppointmentsOfMonth(reportTableView, reportComboBox.getValue());
+            reportResultLabel.setText("Total number of appointments in the month of "+ reportComboBox.getValue()
+                    + " is "+ reportTableView.getItems().size());
+
+        }
+        
+        if(appointmentMonthTypeReport.isSelected() && reportComboBox.getValue() != null && selectTypeComboBox.getValue() != null){
+            // resets table view
+            reportTableView.getItems().clear();
+            reportTableView.getColumns().clear();
+
+            // formats and populates view with appointments of selected month
+            AppointmentQuery.formatAppointmentTable(reportTableView);
+            AppointmentQuery.getAppointmentsOfMonthType(reportTableView, reportComboBox.getValue(), selectTypeComboBox.getValue());
+            reportResultLabel.setText("Total number of appointments in the month of "+ reportComboBox.getValue()
+                    + " and type of "+ selectTypeComboBox.getValue()+ " is "+ reportTableView.getItems().size());
+        }
+
 
         if(appointmentContactReport.isSelected() && reportComboBox.getValue() != null){
             reportTableView.getItems().clear();
