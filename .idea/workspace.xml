@@ -5,88 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94007dc8-39b9-4af7-a6ce-42114a118c61" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/javadocs/allclasses-index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/allpackages-index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/AppointmentController.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/CustomerController.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/HomeController.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/LoginController.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/LoginController.loginAttemptsRecord.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/LoginController.retrieveLanguageBundle.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/package-summary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/controller/package-tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/copy.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/AppointmentQuery.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/CustomerQuery.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/DatabaseConfig.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/HelperQuery.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/JDBC.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/LoginQuery.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/package-summary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/database/package-tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/element-list" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/help-doc.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/helper/Alerts.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/helper/Time.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/helper/Validation.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/helper/package-summary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/helper/package-tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-1.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-10.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-11.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-12.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-13.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-14.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-15.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-16.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-17.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-18.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-3.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-4.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-5.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-6.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-7.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-8.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index-files/index-9.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/legal/ADDITIONAL_LICENSE_INFO" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/legal/ASSEMBLY_EXCEPTION" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/legal/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/legal/jquery.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/legal/jqueryUI.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/link.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/main/Main.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/main/package-summary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/main/package-tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/member-search-index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/model/Appointment.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/model/Customer.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/model/package-summary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/model/package-tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/module-search-index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/overview-summary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/overview-tree.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/package-search-index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/resources/glass.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/resources/x.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/script-dir/jquery-3.6.1.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/script-dir/jquery-ui.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/script-dir/jquery-ui.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/script.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/search-page.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/search.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/stylesheet.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/tag-search-index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javadocs/type-search-index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/login_activity.txt" beforeDir="false" afterPath="$PROJECT_DIR$/login_activity.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/README.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/JDBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/JDBC.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +47,7 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/elley/Desktop/WGU Projects/Software_ PA_C482/InventoryManagementSystem",
+    "last_opened_file_path": "C:/Users/elley/Desktop",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
