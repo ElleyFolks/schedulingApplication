@@ -595,7 +595,6 @@ public class AppointmentQuery {
      * Retrieves appointments associated with a specific contact ID and populates a TableView with the results.
      *
      * @param tableView The TableView to be populated with appointment data.
-     * @param contactID The ID of the contact for whom to retrieve appointments.
      */
     public static void getAppointmentsOfContactID(TableView<Appointment> tableView) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -642,46 +641,23 @@ public class AppointmentQuery {
 
     /**
      * Retrieves appointments associated with a specific country ID and populates a TableView.
-     *
-     * @param tableView The TableView to be populated with appointment data.
-     * @param countryID The ID of the country for which appointments are retrieved.
      */
-    public static void getAppointmentsWithCountryID(TableView<Appointment> tableView, Integer countryID) {
-        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-
-        String query = "SELECT * FROM appointments AS a " +
+    public static void getCustomersWithCountryID() {
+        ObservableList<String> appointmentWithCountry = FXCollections.observableArrayList();
+        String query = "SELECT Appointment_ID, Customer_ID, Contact_ID FROM appointments AS a " +
                 "INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
                 "INNER JOIN customers AS cu ON a.Customer_ID = cu.Customer_ID "+
-                "INNER JOIN first_level_divisions AS d ON cu.Division_ID = d.Division_ID " +
-                "WHERE d.Country_ID=?;";
+                "INNER JOIN first_level_divisions AS d ON cu.Division_ID = d.Division_ID;";
 
         try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
 
-            statement.setInt(1, countryID);
             ResultSet results = statement.executeQuery();
             if (results != null) {
                 try {
                     while (results.next()) {
-                        int appointmentId = results.getInt("Appointment_ID");
-                        String title = results.getString("Title");
-                        String description = results.getString("Description");
-                        String location = results.getString("Location");
-                        String type = results.getString("Type");
-                        LocalDateTime startDate = results.getTimestamp("Start").toLocalDateTime();
-                        LocalDateTime endDate = results.getTimestamp("End").toLocalDateTime();
-                        int customerId = results.getInt("Customer_ID");
-                        int userId = results.getInt("User_ID");
-                        int contactId = results.getInt("Contact_ID");
-                        String contactName = results.getString("Contact_Name");
 
-                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
-                                startDate, endDate, customerId, userId, contactId, contactName);
-
-                        appointments.add(appointment);
+                        appointmentWithCountry.add(String.valueOf(results));
                     }
-
-                    tableView.setItems(appointments);
-                    tableView.refresh();
 
                     System.out.println("Successfully added data!");
 

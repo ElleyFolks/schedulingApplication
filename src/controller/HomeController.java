@@ -19,10 +19,11 @@ import model.Customer;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class that contains event handlers, controller methods,
@@ -77,13 +78,15 @@ public class HomeController implements Initializable {
     private ComboBox<String> reportComboBox;
 
     @FXML
-    private TableView<Appointment> reportTableView;
-
-    @FXML
     private VBox comboBoxVBox;
 
     @FXML
+    private ListView<String> reportListView;
+
+    @FXML
     private ComboBox<String> selectTypeComboBox;
+
+
 
     private Map<String, Integer> contactNameIdMap = new HashMap<>();
 
@@ -101,6 +104,10 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+
+            appointments = AppointmentQuery.getAllAppointments();
+            customers = CustomerQuery.getAllCustomers();
+
             // populates customers table
             customersTable.setPadding(new javafx.geometry.Insets(20));
             CustomerQuery.formatCustomerTable(customersTable);
@@ -114,10 +121,6 @@ public class HomeController implements Initializable {
             AppointmentQuery.getAllAppointments(appointments, appointmentsTable);
 
             populateAppointmentTable();
-
-            // appointments by type selected by default
-            appointmentMonthTypeReport.setSelected(true);
-            formatReport();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -154,6 +157,116 @@ public class HomeController implements Initializable {
         }
     }
 
+    private String formatStringToMonthYear(LocalDateTime dateTime) {
+        return dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + dateTime.getYear();
+    }
+
+    public ObservableList<String> createMonthTypeReport(List<Appointment> appointmentList){
+        // Uses streams to group appointments by month and type, counts them
+        Map<String, Long> groupedByMonthAndType = appointmentList.stream()
+                .collect(Collectors.groupingBy(
+                        appointment -> formatStringToMonthYear(appointment.getStartDateTime()) + " , Type: " + appointment.getAppointmentType(),
+                        Collectors.counting()
+                ));
+
+        // Tree map populated with entries grouped by month and type, sorts keys (month and type) in ascending order
+        Map<String, Long> treeMap = new TreeMap<>(groupedByMonthAndType);
+
+        ObservableList<String> generatedReport = FXCollections.observableArrayList();
+        treeMap.forEach((key, value) -> generatedReport.add(key + " , Count: " + value));
+
+        return generatedReport;
+    }
+
+    private String formatAppointments(Appointment appointment){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+        String formattedString = "Appointment ID: " + appointment.getAppointmentId() + " " +
+                "Title: " + appointment.getAppointmentTitle() + " " +
+                "Type: "+ appointment.getAppointmentType() + " " +
+                "Appointment Description: "+ appointment.getAppointmentDescription() + " " +
+                "Times " + appointment.getStartDateTime().format(formatter) + " " +
+                "through " + appointment.getEndDateTime().format(formatter) + " " +
+                "Customer ID: "+ appointment.getCustomerId();
+        return formattedString;
+    }
+
+    public ObservableList<String> createContactReport(List<Appointment> appointmentList){
+        ObservableList<String> report = FXCollections.observableArrayList();
+
+        // Uses stream to group appointments by contact ID first, then by contact name
+        Map<Integer, Map<String, List<Appointment>>> sortedByContactId = appointmentList.stream()
+                .collect(Collectors.groupingBy(Appointment::getContactId,
+                        Collectors.groupingBy(Appointment::getContactFullName)));
+
+        // next sort by contact name
+        sortedByContactId.forEach((contactId, sortedByContactFullName) -> {
+            sortedByContactFullName.forEach((contactName, resultList) -> {
+                // contact name added to the report
+                report.add("Contact Name: " + contactName + " Contact ID: " + contactId);
+
+                // Sort appointments by start date
+                resultList.sort(Comparator.comparing(Appointment::getStartDateTime));
+
+                // formatting, then adding appointment information to report
+                resultList.forEach(appointment -> {
+                    report.add(formatAppointments(appointment));
+                });
+
+                // reporting total appointments contact
+                report.add("Number of appointments for " + contactName + ": " + resultList.size());
+
+                // delimiter between each report
+                report.add("____End Report____");
+            });
+        });
+
+        return report;
+    }
+
+    private String formatCustomers(Customer customer){
+        String formattedString = "Customer Name:" + customer.getCustomerFullName()+ " " +
+                "Customer ID: " + customer.getCustomerId() + " " +
+                "Country: "+ customer.getCountry() + " " +
+                "Division: "+ customer.getDivision() + " " +
+                "Division ID: " + customer.getDivisionId() + " " +
+                "Address: " + customer.getCustomerAddress() + " " +
+                "Postal Code: "+ customer.getPostalCode() + " " +
+                "Phone: "+ customer.getCustomerPhoneNumber() + " ";
+
+        return formattedString;
+    }
+
+    public ObservableList<String> createCounrtyReport(List<Customer> customerList){
+        ObservableList<String> report = FXCollections.observableArrayList();
+
+        // Uses stream to group appointments by contact ID first, then by contact name
+        Map<String, Map<String, List<Customer>>> sortedByCountry = customerList.stream()
+                .collect(Collectors.groupingBy(Customer::getCountry,
+                        Collectors.groupingBy(Customer::getDivision)));
+
+        // next sort by customer name
+        sortedByCountry.forEach((customerId, sortedByCustomerFullName) -> {
+            sortedByCustomerFullName.forEach((customerName, resultList) -> {
+                // contact name added to the report
+                report.add("Customer Name: " + customerName + " Customer ID: " + customerId);
+
+                // formatting, then adding appointment information to report
+                resultList.forEach(customer -> {
+                    report.add(formatCustomers(customer));
+                });
+
+                // reporting total appointments contact
+                report.add("Number of customers in country " + resultList.size());
+
+                // delimiter between each report
+                report.add("____End Report____");
+            });
+        });
+
+        return report;
+    }
+
+
     /**
      * Formats the report view based on the selected report type.
      * Clears existing data and populates the report combo box with appropriate options.
@@ -177,126 +290,53 @@ public class HomeController implements Initializable {
                     reportComboBox.getItems().add(String.valueOf(i));
                 }
             }
-            createTypeComboBox();
             // populates combo box with appointment types
             HelperQuery.setAppointmentTypes(selectTypeComboBox);
         }
 
         // populates report combo box with contact names
         if(appointmentContactReport.isSelected()){
-            removeExtraComboBox(selectTypeComboBox);
             reportComboBoxLabel.setText("Select contact.");
             HelperQuery.setAppointmentContacts(reportComboBox, contactNameIdMap);
         }
 
         if(appointmentCountryReport.isSelected()){
-            removeExtraComboBox(selectTypeComboBox);
             reportComboBoxLabel.setText("Select country.");
             CustomerQuery.getCountryNameID(reportComboBox,countryNameIdMap);
         }
     }
 
-    private void createTypeComboBox() {
-        // Create the ComboBox and add options if needed
-        selectTypeComboBox = new ComboBox<>();
-        selectTypeComboBox.setPromptText("select type");
-        selectTypeComboBox.setOnAction(event -> createReport());
-        selectTypeComboBox.getItems().addAll("Option 1", "Option 2", "Option 3");
-
-        // Add the ComboBox to the container
-        comboBoxVBox.getChildren().add(selectTypeComboBox);
-    }
-
-    private void removeExtraComboBox(ComboBox<?> comboBox) {
-        // Remove the ComboBox from the container
-        comboBoxVBox.getChildren().remove(comboBox);
-    }
 
     /**
      * Creates and displays the report based on the selected report type and options.
      * Resets the table view, then formats and populates the view with the relevant data.
      * Updates the report result label with the total number of records in the report.
      */
+
+
     @FXML
     private void createReport(){
-        /*
-        if(appointmentTypeReport.isSelected() && reportComboBox.getValue() != null){
+
+        contactNameIdMap.clear();
+        customerNameIdMap.clear();
+
+        if(appointmentMonthTypeReport.isSelected()){
             // resets table view
-            reportTableView.getItems().clear();
-            reportTableView.getColumns().clear();
-
-            // formats and populates view with appointments of selected type
-            AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsOfType(reportTableView,reportComboBox.getValue());
-            reportResultLabel.setText("Total number of appointments with type "+ reportComboBox.getValue()
-                    + " is "+ reportTableView.getItems().size());
+            reportListView.getItems().clear();
+            reportListView.setItems(createMonthTypeReport(appointments));
         }
-
-        if(appointmentMonthReport.isSelected() && reportComboBox.getValue() != null){
-            // resets table view
-            reportTableView.getItems().clear();
-            reportTableView.getColumns().clear();
-
-            // formats and populates view with appointments of selected month
-            AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsOfMonth(reportTableView, reportComboBox.getValue());
-            reportResultLabel.setText("Total number of appointments in the month of "+ reportComboBox.getValue()
-                    + " is "+ reportTableView.getItems().size());
-        }
-         */
-
-
-        if(appointmentMonthTypeReport.isSelected() && reportComboBox.getValue() != null){
-            // resets table view
-            reportTableView.getItems().clear();
-            reportTableView.getColumns().clear();
-
-
-            // formats and populates view with appointments of selected month
-            AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsOfMonth(reportTableView, reportComboBox.getValue());
-            reportResultLabel.setText("Total number of appointments in the month of "+ reportComboBox.getValue()
-                    + " is "+ reportTableView.getItems().size());
-
-        }
-        
-        if(appointmentMonthTypeReport.isSelected() && reportComboBox.getValue() != null && selectTypeComboBox.getValue() != null){
-            // resets table view
-            reportTableView.getItems().clear();
-            reportTableView.getColumns().clear();
-
-            // formats and populates view with appointments of selected month
-            AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsOfMonthType(reportTableView, reportComboBox.getValue(), selectTypeComboBox.getValue());
-            reportResultLabel.setText("Total number of appointments in the month of "+ reportComboBox.getValue()
-                    + " and type of "+ selectTypeComboBox.getValue()+ " is "+ reportTableView.getItems().size());
-        }
-
 
         if(appointmentContactReport.isSelected()){
-            formatReport();
-
-            reportTableView.getItems().clear();
-            reportTableView.getColumns().clear();
-
-            // formats and populates view with appointments of selected month
-            AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsOfContactID(reportTableView);
-            reportResultLabel.setText("Total number of appointments for contact "+ reportComboBox.getValue()
-            + " is " + reportTableView.getItems().size());
+            reportListView.getItems().clear();
+            reportListView.setItems(createContactReport(appointments));
         }
 
-        if(appointmentCountryReport.isSelected() && reportComboBox.getValue() != null){
-            reportTableView.getItems().clear();
-            reportTableView.getColumns().clear();
-
-            // formats and populates view with appointments of selected month
-            AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsWithCountryID(reportTableView, countryNameIdMap.get(reportComboBox.getValue()));
-            reportResultLabel.setText("Total number of appointments for country "+ reportComboBox.getValue()
-                    + " is " + reportTableView.getItems().size());
+        if(appointmentCountryReport.isSelected()){
+            reportListView.getItems().clear();
+            reportListView.setItems(createCounrtyReport(customers));
         }
     }
+
 
     /**
      * Retrieves the selected appointment for modification.

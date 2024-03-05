@@ -103,6 +103,52 @@ public class CustomerQuery {
         }
     }
 
+    public static ObservableList<Customer> getAllCustomers() {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM customers AS c " +
+                "INNER JOIN first_level_divisions AS d ON c.Division_ID = d.Division_ID " +
+                "INNER JOIN countries AS co ON co.Country_ID=d.COUNTRY_ID;";
+
+        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query);
+             ResultSet results = statement.executeQuery()) {
+            if (results != null) {
+                try {
+                    while (results.next()) {
+                        int customerID = results.getInt("Customer_ID");
+                        String customerName = results.getString("Customer_Name");
+                        String address = results.getString("Address");
+                        String postal = results.getString("Postal_Code");
+                        String phone = results.getString("Phone");
+                        String division = results.getString("Division");
+                        String country = results.getString("Country");
+                        int divisionID = results.getInt("Division_ID");
+
+                        Customer customer = new Customer(
+                                customerID,
+                                customerName,
+                                address,
+                                postal,
+                                phone,
+                                division,
+                                country,
+                                divisionID
+                        );
+
+                        customers.add(customer);
+                    }
+
+                    return customers;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing query: " + e.getMessage());
+        }
+        return customers;
+    }
+
     /**
      * Creates a new customer in the database with the provided information.
      *

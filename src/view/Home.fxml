@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -110,7 +111,7 @@
                                        <children>
                                           <VBox spacing="10.0">
                                              <children>
-                                                        <RadioButton fx:id="appointmentMonthTypeReport" mnemonicParsing="false" onAction="#formatReport" text="By Type and Month">
+                                                        <RadioButton fx:id="appointmentMonthTypeReport" mnemonicParsing="false" onAction="#createReport" text="By Type and Month">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -123,7 +124,7 @@
                                                       <Font size="15.0" />
                                                    </font>
                                                 </RadioButton>
-                                                <RadioButton fx:id="appointmentCountryReport" mnemonicParsing="false" onAction="#formatReport" text="Country" toggleGroup="$reports">
+                                                <RadioButton fx:id="appointmentCountryReport" mnemonicParsing="false" onAction="#createReport" text="Country" toggleGroup="$reports">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -146,7 +147,7 @@
                                        <font>
                                           <Font size="15.0" />
                                        </font></Label>
-                                          <TableView fx:id="reportTableView" prefWidth="468.0" />
+                                    <ListView fx:id="reportListView" />
                                       </children>
                                   </VBox>
                               </children>
