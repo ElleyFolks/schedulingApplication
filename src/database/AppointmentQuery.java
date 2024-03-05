@@ -597,15 +597,13 @@ public class AppointmentQuery {
      * @param tableView The TableView to be populated with appointment data.
      * @param contactID The ID of the contact for whom to retrieve appointments.
      */
-    public static void getAppointmentsOfContactID(TableView<Appointment> tableView, Integer contactID) {
+    public static void getAppointmentsOfContactID(TableView<Appointment> tableView) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID " +
-                "WHERE a.Contact_ID=?;";
+        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID;";
 
         try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
 
-            statement.setInt(1, contactID);
             ResultSet results = statement.executeQuery();
             if (results != null) {
                 try {

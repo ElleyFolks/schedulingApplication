@@ -251,6 +251,7 @@ public class HomeController implements Initializable {
             reportTableView.getItems().clear();
             reportTableView.getColumns().clear();
 
+
             // formats and populates view with appointments of selected month
             AppointmentQuery.formatAppointmentTable(reportTableView);
             AppointmentQuery.getAppointmentsOfMonth(reportTableView, reportComboBox.getValue());
@@ -272,13 +273,15 @@ public class HomeController implements Initializable {
         }
 
 
-        if(appointmentContactReport.isSelected() && reportComboBox.getValue() != null){
+        if(appointmentContactReport.isSelected()){
+            formatReport();
+
             reportTableView.getItems().clear();
             reportTableView.getColumns().clear();
 
             // formats and populates view with appointments of selected month
             AppointmentQuery.formatAppointmentTable(reportTableView);
-            AppointmentQuery.getAppointmentsOfContactID(reportTableView, contactNameIdMap.get(reportComboBox.getValue()));
+            AppointmentQuery.getAppointmentsOfContactID(reportTableView);
             reportResultLabel.setText("Total number of appointments for contact "+ reportComboBox.getValue()
             + " is " + reportTableView.getItems().size());
         }

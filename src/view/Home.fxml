@@ -118,7 +118,7 @@
                                                                 <ToggleGroup fx:id="reports" />
                                                    </toggleGroup>
                                                 </RadioButton>
-                                                        <RadioButton fx:id="appointmentContactReport" mnemonicParsing="false" onAction="#formatReport" text="Contact Schedule" toggleGroup="$reports">
+                                                        <RadioButton fx:id="appointmentContactReport" mnemonicParsing="false" onAction="#createReport" text="Contact Schedule" toggleGroup="$reports">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>

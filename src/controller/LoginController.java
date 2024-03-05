@@ -35,13 +35,14 @@ import java.util.TimeZone;
 /**
  * Class that contains event handlers, controller methods,
  * and logical implementation for logging into the application.
- *
+ *<p>
  * LAMBDA EXPRESSION - Contains a lambda expression for retrieving a specific resource from the language resource bundle.
  * It is used for the logic that translates the login screen to English or French.
- *
+ *</p>
+ * </p>
  * LAMBDA EXPRESSION - Contains a lambda expression for passing in the login_activity.txt filename to
  * functions implementing logging (reading and writing).
- *
+ *</p>
  * JUSTIFICATION - Improves readability by providing quicker, shorter and more efficient code.
  *
  * @author Elley Folks
@@ -130,11 +131,9 @@ public class LoginController implements Initializable {
      * Used when login button pressed on form.
      * Validates user credentials, checks for appointments within the next 15 minutes,
      * and transitions to the home screen upon successful login.
-     *
-     * @param event The action event triggered by the login button.
      */
     @FXML
-    void onLoginAction(ActionEvent event){
+    void onLoginAction(){
 
         // generates log file to track login attempts
         createLoginFile();
