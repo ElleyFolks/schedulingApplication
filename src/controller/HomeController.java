@@ -58,9 +58,6 @@ public class HomeController implements Initializable {
     @FXML
     private RadioButton appointmentCountryReport;
 
-    @FXML
-    private Label reportResultLabel;
-
     public static Appointment appointmentToModify;
 
     public static Customer customerToModify;
@@ -72,21 +69,7 @@ public class HomeController implements Initializable {
     ObservableList<Customer> customers = FXCollections.observableArrayList();
 
     @FXML
-    private Label reportComboBoxLabel;
-
-    @FXML
-    private ComboBox<String> reportComboBox;
-
-    @FXML
-    private VBox comboBoxVBox;
-
-    @FXML
     private ListView<String> reportListView;
-
-    @FXML
-    private ComboBox<String> selectTypeComboBox;
-
-
 
     private Map<String, Integer> contactNameIdMap = new HashMap<>();
 
@@ -104,9 +87,6 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-
-            appointments = AppointmentQuery.getAllAppointments();
-            customers = CustomerQuery.getAllCustomers();
 
             // populates customers table
             customersTable.setPadding(new javafx.geometry.Insets(20));
@@ -202,7 +182,7 @@ public class HomeController implements Initializable {
         sortedByContactId.forEach((contactId, sortedByContactFullName) -> {
             sortedByContactFullName.forEach((contactName, resultList) -> {
                 // contact name added to the report
-                report.add("Contact Name: " + contactName + " Contact ID: " + contactId);
+                report.add("Contact Name: " + contactName + "\n Contact ID: " + contactId);
 
                 // Sort appointments by start date
                 resultList.sort(Comparator.comparing(Appointment::getStartDateTime));
@@ -224,31 +204,29 @@ public class HomeController implements Initializable {
     }
 
     private String formatCustomers(Customer customer){
-        String formattedString = "Customer Name:" + customer.getCustomerFullName()+ " " +
-                "Customer ID: " + customer.getCustomerId() + " " +
-                "Country: "+ customer.getCountry() + " " +
-                "Division: "+ customer.getDivision() + " " +
-                "Division ID: " + customer.getDivisionId() + " " +
-                "Address: " + customer.getCustomerAddress() + " " +
-                "Postal Code: "+ customer.getPostalCode() + " " +
-                "Phone: "+ customer.getCustomerPhoneNumber() + " ";
+        String formattedString = "Customer Name: " + customer.getCustomerFullName()+ ", " +
+                "Customer ID: " + customer.getCustomerId() + ", " +
+                "Country: "+ customer.getCountry() + ", " +
+                "Division: "+ customer.getDivision() + ", " +
+                "Division ID: " + customer.getDivisionId() + ", " +
+                "Address: " + customer.getCustomerAddress() + ", " +
+                "Postal Code: "+ customer.getPostalCode() + ", " +
+                "Phone: "+ customer.getCustomerPhoneNumber();
 
         return formattedString;
     }
 
-    public ObservableList<String> createCounrtyReport(List<Customer> customerList){
+    public ObservableList<String> createCountryReport(List<Customer> customerList){
         ObservableList<String> report = FXCollections.observableArrayList();
 
-        // Uses stream to group appointments by contact ID first, then by contact name
-        Map<String, Map<String, List<Customer>>> sortedByCountry = customerList.stream()
-                .collect(Collectors.groupingBy(Customer::getCountry,
-                        Collectors.groupingBy(Customer::getDivision)));
+        // Uses stream to group appointments by contact ID first, then by division
+        Map<String, List<Customer>> sortedByCountry = customerList.stream()
+                .collect(Collectors.groupingBy(Customer::getCountry));
 
-        // next sort by customer name
-        sortedByCountry.forEach((customerId, sortedByCustomerFullName) -> {
-            sortedByCustomerFullName.forEach((customerName, resultList) -> {
+        // next sort division
+        sortedByCountry.forEach((country, resultList) -> {
                 // contact name added to the report
-                report.add("Customer Name: " + customerName + " Customer ID: " + customerId);
+                report.add("Country: " + country);
 
                 // formatting, then adding appointment information to report
                 resultList.forEach(customer -> {
@@ -256,69 +234,25 @@ public class HomeController implements Initializable {
                 });
 
                 // reporting total appointments contact
-                report.add("Number of customers in country " + resultList.size());
+                report.add("Number of customers in "+ country +" = "+resultList.size());
 
                 // delimiter between each report
                 report.add("____End Report____");
-            });
         });
 
         return report;
     }
-
-
-    /**
-     * Formats the report view based on the selected report type.
-     * Clears existing data and populates the report combo box with appropriate options.
-     */
-    @FXML
-    private void formatReport(){
-
-        // clearing results because these can change
-        contactNameIdMap.clear();
-        customerNameIdMap.clear();
-        reportComboBox.getItems().clear();
-        reportResultLabel.setText("");
-
-        // populates reports combo box with months
-        if(appointmentMonthTypeReport.isSelected()){
-            reportComboBoxLabel.setText("Select appointment month and type.");
-            for (int i = 1; i <= 12; i++) {
-                if(i<10){
-                    reportComboBox.getItems().add("0"+String.valueOf(i));
-                }else{
-                    reportComboBox.getItems().add(String.valueOf(i));
-                }
-            }
-            // populates combo box with appointment types
-            HelperQuery.setAppointmentTypes(selectTypeComboBox);
-        }
-
-        // populates report combo box with contact names
-        if(appointmentContactReport.isSelected()){
-            reportComboBoxLabel.setText("Select contact.");
-            HelperQuery.setAppointmentContacts(reportComboBox, contactNameIdMap);
-        }
-
-        if(appointmentCountryReport.isSelected()){
-            reportComboBoxLabel.setText("Select country.");
-            CustomerQuery.getCountryNameID(reportComboBox,countryNameIdMap);
-        }
-    }
-
 
     /**
      * Creates and displays the report based on the selected report type and options.
      * Resets the table view, then formats and populates the view with the relevant data.
      * Updates the report result label with the total number of records in the report.
      */
-
-
     @FXML
     private void createReport(){
 
-        contactNameIdMap.clear();
-        customerNameIdMap.clear();
+        appointments = AppointmentQuery.getAllAppointments();
+        customers = CustomerQuery.getAllCustomers();
 
         if(appointmentMonthTypeReport.isSelected()){
             // resets table view
@@ -333,7 +267,7 @@ public class HomeController implements Initializable {
 
         if(appointmentCountryReport.isSelected()){
             reportListView.getItems().clear();
-            reportListView.setItems(createCounrtyReport(customers));
+            reportListView.setItems(createCountryReport(customers));
         }
     }
 

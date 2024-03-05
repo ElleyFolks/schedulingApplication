@@ -8,8 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/login_activity.txt" beforeDir="false" afterPath="$PROJECT_DIR$/login_activity.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/AppointmentQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/AppointmentQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/CustomerQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/CustomerQuery.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/view/Home.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Home.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
