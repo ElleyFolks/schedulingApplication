@@ -36,13 +36,14 @@ import java.util.TimeZone;
  * Class that contains event handlers, controller methods,
  * and logical implementation for logging into the application.
  *
- * LAMBDA EXPRESSION - Contains a lambda expression for retrieving a specific resource from the language resource bundle.
+ * LAMBDA EXPRESSION 1 - Contains a lambda expression for retrieving a specific resource from the language resource bundle.
  * It is used for the logic that translates the login screen to English or French.
+ ** JUSTIFICATION 1 - Improves readability by providing quicker, shorter and more efficient way to load languages based on user settings.
  *
- * LAMBDA EXPRESSION - Contains a lambda expression for passing in the login_activity.txt filename to
+ * LAMBDA EXPRESSION 2 - Contains a lambda expression for passing in the login_activity.txt filename to
  * functions implementing logging (reading and writing).
  *
- * JUSTIFICATION - Improves readability by providing quicker, shorter and more efficient code.
+ * JUSTIFICATION 2 - Provides a more readable way to read / write to log file.
  *
  * @author Elley Folks
  */

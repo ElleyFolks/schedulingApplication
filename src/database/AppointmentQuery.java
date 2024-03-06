@@ -235,58 +235,6 @@ public class AppointmentQuery {
     }
 
     /**
-     * Retrieves appointments of a specific type and populates the provided TableView.
-     *
-     * @param tableView     The TableView to display the appointments.
-     * @param selectedType  The type of appointments to retrieve.
-     */
-    public static void getAppointmentsOfType(TableView<Appointment> tableView, String selectedType) {
-        String sqlQuery = "SELECT * FROM appointments AS a INNER JOIN contacts AS c " +
-                "ON a.Contact_ID=c.Contact_ID WHERE Type=? ORDER BY a.Appointment_ID; ";
-
-        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-
-        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(sqlQuery)){
-             statement.setString(1, selectedType);
-             ResultSet results = statement.executeQuery();
-            if (results != null) {
-                try {
-                    while (results.next()) {
-                        int appointmentId = results.getInt("Appointment_ID");
-                        String title = results.getString("Title");
-                        String description = results.getString("Description");
-                        String location = results.getString("Location");
-                        String type = results.getString("Type");
-                        LocalDateTime startTime = results.getTimestamp("Start").toLocalDateTime();
-                        LocalDateTime endTime = results.getTimestamp("End").toLocalDateTime();
-                        int customerId = results.getInt("Customer_ID");
-                        int userId = results.getInt("User_ID");
-                        int contactId = results.getInt("Contact_ID");
-                        String contactName = results.getString("Contact_Name");
-
-                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
-                                startTime, endTime, customerId, userId, contactId, contactName);
-
-                        appointments.add(appointment);
-                    }
-
-                    tableView.setItems(appointments);
-                    tableView.refresh();
-
-                    System.out.println("Successfully added data!");
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    System.out.println("Failed to add table data...");
-                }
-            }
-        } catch (SQLException sqlException) {
-            // Log or throw a more specific exception
-            System.err.println("Error executing query: " + sqlException.getMessage());
-        }
-    }
-
-    /**
      * Retrieves appointments within a specific month and populates the provided TableView.
      *
      * @param tableView        The TableView to display the appointments.
