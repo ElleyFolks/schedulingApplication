@@ -3,8 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -17,150 +17,135 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeController">
-   <children>
-      <VBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard View:">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <TabPane tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Customers">
-                  <content>
-                    <AnchorPane>
-                           <children>
-                              <VBox spacing="5.0">
-                                 <children>
-                                    <TableView fx:id="customersTable" />
-                                    <ButtonBar>
-                                       <buttons>
-                                        <Button fx:id="addCustomerBtn" mnemonicParsing="false" onAction="#onAddCustomerAction" prefHeight="25.0" text="Add" />
-                                          <Button fx:id="modifyCustomerBtn" mnemonicParsing="false" onAction="#onModifyCustomerAction" text="Modify" />
-                                          <Button fx:id="removeCustomerBtn" mnemonicParsing="false" onAction="#onRemoveCustomerAction" text="Remove" />
-                                       </buttons>
-                                    </ButtonBar>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text="Appointments">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0">
-                           <children>
-                              <VBox spacing="5.0">
-                                 <children>
-                                    <TableView fx:id="appointmentsTable" />
-                                    <HBox>
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <RadioButton fx:id="weekRadioButton" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#populateAppointmentTable" text="Current week">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                   <toggleGroup>
-                                                      <ToggleGroup fx:id="selectAppointmentRange" />
-                                                   </toggleGroup>
-                                                </RadioButton>
-                                                <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#populateAppointmentTable" text="Current month" toggleGroup="$selectAppointmentRange">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </RadioButton>
-                                                <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#populateAppointmentTable" text="All" toggleGroup="$selectAppointmentRange">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </RadioButton>
-                                             </children>
-                                          </VBox>
-                                          <ButtonBar>
-                                             <buttons>
-                                                <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#onAddAppointmentAction" prefHeight="25.0" text="Add" />
-                                                <Button fx:id="modifyAppointmentBtn" mnemonicParsing="false" onAction="#onModifyAppointmentAction" text="Modify" />
-                                                <Button fx:id="removeAppointmentBtn" mnemonicParsing="false" onAction="#onRemoveAppointmentAction" text="Remove" />
-                                             </buttons>
-                                          </ButtonBar>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </children></AnchorPane>
-                  </content>
-                </Tab>
-                  <Tab text="Reports">
-                      <content>
-                          <AnchorPane>
-                              <children>
-                                  <VBox alignment="CENTER" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <children>
-                                          <HBox alignment="CENTER" spacing="30.0">
-                                              <opaqueInsets>
-                                                  <Insets />
-                                              </opaqueInsets>
-                                              <padding>
-                                                  <Insets top="20.0" />
-                                              </padding>
-                                          </HBox>
-                                    <HBox spacing="50.0">
-                                       <children>
-                                          <VBox spacing="10.0">
-                                             <children>
-                                                        <RadioButton fx:id="appointmentTypeReport" mnemonicParsing="false" onAction="#formatReport" text="Appointments of Type">
-                                                   <toggleGroup>
-                                                                <ToggleGroup fx:id="reports" />
-                                                   </toggleGroup>
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                        </RadioButton>
-                                                        <RadioButton fx:id="appointmentMonthReport" mnemonicParsing="false" onAction="#formatReport" text="Appointments in Month" toggleGroup="$reports">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </RadioButton>
-                                                        <RadioButton fx:id="appointmentContactReport" mnemonicParsing="false" onAction="#formatReport" text="Contact Schedule" toggleGroup="$reports">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </RadioButton>
-                                                <RadioButton fx:id="appointmentCountryReport" mnemonicParsing="false" onAction="#formatReport" text="Country" toggleGroup="$reports">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </RadioButton>
-                                             </children>
-                                          </VBox>
-                                          <VBox spacing="10.0">
-                                             <children>
-                                                      <Label fx:id="reportComboBoxLabel" text="Combo Label">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                      <ComboBox fx:id="reportComboBox" onAction="#createReport" prefWidth="150.0" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                          <Label fx:id="reportResultLabel" text="Report result">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font></Label>
-                                          <TableView fx:id="reportTableView" prefWidth="468.0" />
-                                      </children>
-                                  </VBox>
-                              </children>
-                          </AnchorPane>
-                      </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
-         </children>
-      </VBox>
-   </children>
+    <children>
+        <VBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard View:">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Text>
+                <TabPane tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab text="Customers">
+                            <content>
+                                <AnchorPane>
+                                    <children>
+                                        <VBox spacing="5.0">
+                                            <children>
+                                                <TableView fx:id="customersTable" />
+                                                <ButtonBar>
+                                                    <buttons>
+                                                        <Button fx:id="addCustomerBtn" mnemonicParsing="false" onAction="#onAddCustomerAction" prefHeight="25.0" text="Add" />
+                                                        <Button fx:id="modifyCustomerBtn" mnemonicParsing="false" onAction="#onModifyCustomerAction" text="Modify" />
+                                                        <Button fx:id="removeCustomerBtn" mnemonicParsing="false" onAction="#onRemoveCustomerAction" text="Remove" />
+                                                    </buttons>
+                                                </ButtonBar>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Appointments">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0">
+                                    <children>
+                                        <VBox spacing="5.0">
+                                            <children>
+                                                <TableView fx:id="appointmentsTable" />
+                                                <HBox>
+                                                    <children>
+                                                        <VBox>
+                                                            <children>
+                                                                <RadioButton fx:id="weekRadioButton" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#populateAppointmentTable" text="Current week">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                    <toggleGroup>
+                                                                        <ToggleGroup fx:id="selectAppointmentRange" />
+                                                                    </toggleGroup>
+                                                                </RadioButton>
+                                                                <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#populateAppointmentTable" text="Current month" toggleGroup="$selectAppointmentRange">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                </RadioButton>
+                                                                <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#populateAppointmentTable" text="All" toggleGroup="$selectAppointmentRange">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                </RadioButton>
+                                                            </children>
+                                                        </VBox>
+                                                        <ButtonBar>
+                                                            <buttons>
+                                                                <Button fx:id="addAppointmentBtn" mnemonicParsing="false" onAction="#onAddAppointmentAction" prefHeight="25.0" text="Add" />
+                                                                <Button fx:id="modifyAppointmentBtn" mnemonicParsing="false" onAction="#onModifyAppointmentAction" text="Modify" />
+                                                                <Button fx:id="removeAppointmentBtn" mnemonicParsing="false" onAction="#onRemoveAppointmentAction" text="Remove" />
+                                                            </buttons>
+                                                        </ButtonBar>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children></AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Reports">
+                            <content>
+                                <AnchorPane>
+                                    <children>
+                                        <VBox alignment="CENTER" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="30.0">
+                                                    <opaqueInsets>
+                                                        <Insets />
+                                                    </opaqueInsets>
+                                                    <padding>
+                                                        <Insets top="20.0" />
+                                                    </padding>
+                                                </HBox>
+                                                <HBox spacing="50.0">
+                                                    <children>
+                                                        <VBox spacing="10.0">
+                                                            <children>
+                                                                <RadioButton fx:id="appointmentMonthTypeReport" mnemonicParsing="false" onAction="#createReport" text="By Type and Month">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                    <toggleGroup>
+                                                                        <ToggleGroup fx:id="reports" />
+                                                                    </toggleGroup>
+                                                                </RadioButton>
+                                                                <RadioButton fx:id="appointmentContactReport" mnemonicParsing="false" onAction="#createReport" text="Contact Schedule" toggleGroup="$reports">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                </RadioButton>
+                                                                <RadioButton fx:id="appointmentCountryReport" mnemonicParsing="false" onAction="#createReport" text="Customers by Country" toggleGroup="$reports">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                </RadioButton>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="reportResultLabel" text="Report result">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                                <ListView fx:id="reportListView" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
