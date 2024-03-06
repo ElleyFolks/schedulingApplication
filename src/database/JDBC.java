@@ -26,10 +26,20 @@ public class JDBC {
     private static final String MYSQLJDBCDriver = "com.mysql.cj.jdbc.Driver";
     private static Connection conn = null;
 
+    /**
+     * Gets the existing database connection.
+     *
+     * @return The current database connection.
+     */
     public static Connection getConnection(){
         return conn;
     }
 
+    /**
+     * Establishes a new connection to the SQL database.
+     *
+     * @return The newly established database connection.
+     */
     public static Connection establishConnection() {
         try {
             Class.forName(MYSQLJDBCDriver);
@@ -50,6 +60,9 @@ public class JDBC {
         return conn;
     }
 
+    /**
+     * Closes the existing database connection.
+     */
     public static void endConnection() {
 
         try {

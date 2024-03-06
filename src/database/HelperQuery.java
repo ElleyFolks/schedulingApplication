@@ -75,8 +75,16 @@ public class HelperQuery {
      * @return The column name without the prefix.
      */
     public static String removeClassPrefix(String columnName, String className){
-        String formattedName = columnName.replaceFirst(className,"");
-        return formattedName;
+        // keeps class name if something like 'Appointment ID' or 'Customer ID'.
+        if(columnName.contains(className+" ID")) {
+            return columnName;
+            }
+
+        // removes class name if anything other than the class ID or primary key.
+        else{
+            String formattedName = columnName.replaceFirst(className, "");
+            return formattedName;
+        }
     }
 
     /**

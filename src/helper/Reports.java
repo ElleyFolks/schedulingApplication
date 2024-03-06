@@ -22,6 +22,13 @@ public class Reports {
         return dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + dateTime.getYear();
     }
 
+    /**
+     * Creates a report based on the provided map grouping appointments by month and type.
+     * The report is sorted by keys (month and type) in ascending order.
+     *
+     * @param groupedByMonthAndType Map grouping appointments by month and type.
+     * @return ObservableList containing the formatted report.
+     */
     private static ObservableList<String> createMonthTypeReport(Map<String, Long> groupedByMonthAndType){
         // Tree map populated with entries grouped by month and type, sorts keys (month and type) in ascending order
         Map<String, Long> treeMap = new TreeMap<>(groupedByMonthAndType);
@@ -32,6 +39,12 @@ public class Reports {
         return generatedReport;
     }
 
+    /**
+     * Groups appointments by month and type, then counts them.
+     *
+     * @param appointmentList List of appointments to be grouped.
+     * @return Map containing appointments grouped by month and type, along with their counts.
+     */
     private static Map<String, Long> sortAppointmentByMonthType(List<Appointment> appointmentList){
         // Uses streams to group appointments by month and type, counts them
         Map<String, Long> sortedByMonthAndType = appointmentList.stream()
@@ -62,17 +75,24 @@ public class Reports {
      */
     private static String formatAppointmentsString(Appointment appointment){
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-        String formattedString = "Appointment ID: " + appointment.getAppointmentId() + " " +
-                "Title: " + appointment.getAppointmentTitle() + " " +
-                "Type: "+ appointment.getAppointmentType() + " " +
-                "Appointment Description: "+ appointment.getAppointmentDescription() + " " +
-                "Times " + appointment.getStartDateTime().format(timeFormatter) + " " +
-                "through " + appointment.getEndDateTime().format(timeFormatter) + " " +
+        String formattedString = "Appointment ID: " + appointment.getAppointmentId() + ", " +
+                "Title: " + appointment.getAppointmentTitle() + ", " +
+                "Type: "+ appointment.getAppointmentType() + ", " +
+                "Description: "+ appointment.getAppointmentDescription() + ", " +
+                "START DATE TIME (" + appointment.getStartDateTime().format(timeFormatter) +  "), " +
+                "END DATE TIME (" + appointment.getEndDateTime().format(timeFormatter) +  "), " +
                 "Customer ID: "+ appointment.getCustomerId();
 
         return formattedString;
     }
 
+    /**
+     * Creates a report based on the provided map grouping contacts by contact ID.
+     * The report is sorted by keys (month and type) in ascending order.
+     *
+     * @param sortedByContactId Map grouping contacts by contact ID.
+     * @return ObservableList containing the formatted report.
+     */
     private static ObservableList<String> createContactReport(Map<Integer, Map<String, List<Appointment>>> sortedByContactId){
         ObservableList<String> contactSchedule = FXCollections.observableArrayList();
         
@@ -100,6 +120,12 @@ public class Reports {
         return contactSchedule;
     }
 
+    /**
+     * Groups appointments by contact ID and contact name using Java streams.
+     *
+     * @param appointmentList List of appointments to be grouped.
+     * @return Map containing appointments grouped by contact ID and further grouped by contact full name.
+     */
     private static Map<Integer, Map<String, List<Appointment>>> sortContactsById(List<Appointment> appointmentList){
         // Uses stream to group appointments by contact ID
         Map<Integer, Map<String, List<Appointment>>> sortedByContactId = appointmentList.stream()
@@ -139,6 +165,13 @@ public class Reports {
         return formattedString;
     }
 
+    /**
+     * Creates a report based on the provided map grouping customers by country.
+     * The report is sorted by keys (month and type) in ascending order.
+     *
+     * @param sortedByCountry Map grouping customers by country.
+     * @return ObservableList containing the formatted report.
+     */
     private static ObservableList<String> createCountryReport(Map<String, List<Customer>> sortedByCountry){
 
         ObservableList<String> countryReport = FXCollections.observableArrayList();
@@ -159,6 +192,12 @@ public class Reports {
         return countryReport;
     }
 
+    /**
+     * Groups customers by country using Java streams.
+     *
+     * @param customerList List of customers to be grouped by country.
+     * @return Map containing customers grouped by country.
+     */
     private static Map<String, List<Customer>> sortCustomersByCountry(List<Customer> customerList){
 
         // Uses stream to group appointments by country.

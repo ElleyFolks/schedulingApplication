@@ -429,54 +429,6 @@ public class AppointmentQuery {
     }
 
     /**
-     * Retrieves appointments associated with a specific contact ID and populates a TableView with the results.
-     *
-     * @param tableView The TableView to be populated with appointment data.
-     */
-    public static void getAppointmentsOfContactID(TableView<Appointment> tableView) {
-        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-
-        String query = "SELECT * FROM appointments AS a INNER JOIN contacts AS c ON a.Contact_ID=c.Contact_ID;";
-
-        try (PreparedStatement statement = JDBC.getConnection().prepareStatement(query)){
-
-            ResultSet results = statement.executeQuery();
-            if (results != null) {
-                try {
-                    while (results.next()) {
-                        int appointmentId = results.getInt("Appointment_ID");
-                        String title = results.getString("Title");
-                        String description = results.getString("Description");
-                        String location = results.getString("Location");
-                        String type = results.getString("Type");
-                        LocalDateTime startDate = results.getTimestamp("Start").toLocalDateTime();
-                        LocalDateTime endDate = results.getTimestamp("End").toLocalDateTime();
-                        int customerId = results.getInt("Customer_ID");
-                        int userId = results.getInt("User_ID");
-                        int contactId = results.getInt("Contact_ID");
-                        String contactName = results.getString("Contact_Name");
-
-                        Appointment appointment = new Appointment(appointmentId, title, description, location, type,
-                                startDate, endDate, customerId, userId, contactId, contactName);
-
-                        appointments.add(appointment);
-                    }
-
-                    tableView.setItems(appointments);
-                    tableView.refresh();
-
-                    System.out.println("Successfully added data!");
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error executing query: " + e.getMessage());
-        }
-    }
-
-    /**
      * Populates a ComboBox with contact names and builds a mapping of names to their corresponding IDs.
      *
      * @param comboBox   The ComboBox to be populated with contact names.
