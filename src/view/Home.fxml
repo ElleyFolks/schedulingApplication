@@ -123,7 +123,7 @@
                                                       <Font size="15.0" />
                                                    </font>
                                                 </RadioButton>
-                                                <RadioButton fx:id="appointmentCountryReport" mnemonicParsing="false" onAction="#createReport" text="Country" toggleGroup="$reports">
+                                                <RadioButton fx:id="appointmentCountryReport" mnemonicParsing="false" onAction="#createReport" text="Customers by Country" toggleGroup="$reports">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>

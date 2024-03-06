@@ -4,6 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+
+/**
+ * Class used to connect program to database using the JDBC driver.
+ * Includes methods to open, get and end a connection to the database.
+ * @author Elley Folks
+ */
 public class JDBC {
     private static final String protocol = "jdbc";
     private static final String vendorName = ":mysql";

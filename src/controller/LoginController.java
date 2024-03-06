@@ -274,7 +274,7 @@ public class LoginController implements Initializable {
             String formattedDateUtc = formatDateTimeUtc.format(userDateTime);
 
             fileWriter.write(loginStatus + "! Information: Username = "+ logInUsernameField.getText() +", Password = "+ logInPasswordField.getText()
-                    + ", UTC Timestamp = "+ formattedDateUtc + "\n");
+                    + ", UTC Timestamp = "+ formattedDateUtc + " UTC\n");
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

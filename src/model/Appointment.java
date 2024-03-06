@@ -14,7 +14,7 @@ import java.time.LocalTime;
  * @author Elley Folks
  */
 public class Appointment {
-    private int appointmentId = 0;
+    private int appointmentId;
     private String appointmentTitle;
     private String appointmentDescription;
     private String appointmentLocation;

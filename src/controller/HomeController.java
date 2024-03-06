@@ -1,7 +1,6 @@
 package controller;
 
 import database.CustomerQuery;
-import database.HelperQuery;
 import helper.Alerts;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.Main;
 import model.Appointment;
@@ -19,11 +17,7 @@ import model.Customer;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Class that contains event handlers, controller methods,
@@ -70,12 +64,6 @@ public class HomeController implements Initializable {
 
     @FXML
     private ListView<String> reportListView;
-
-    private Map<String, Integer> contactNameIdMap = new HashMap<>();
-
-    private Map<String, Integer> customerNameIdMap = new HashMap<>();
-
-    private Map<String, Integer> countryNameIdMap = new HashMap<>();
 
     /**
      * Initializes the controller with the necessary setup for the main screen.
@@ -137,112 +125,6 @@ public class HomeController implements Initializable {
         }
     }
 
-    private String formatStringToMonthYear(LocalDateTime dateTime) {
-        return dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + dateTime.getYear();
-    }
-
-    public ObservableList<String> createMonthTypeReport(List<Appointment> appointmentList){
-        // Uses streams to group appointments by month and type, counts them
-        Map<String, Long> groupedByMonthAndType = appointmentList.stream()
-                .collect(Collectors.groupingBy(
-                        appointment -> formatStringToMonthYear(appointment.getStartDateTime()) + " , Type: " + appointment.getAppointmentType(),
-                        Collectors.counting()
-                ));
-
-        // Tree map populated with entries grouped by month and type, sorts keys (month and type) in ascending order
-        Map<String, Long> treeMap = new TreeMap<>(groupedByMonthAndType);
-
-        ObservableList<String> generatedReport = FXCollections.observableArrayList();
-        treeMap.forEach((key, value) -> generatedReport.add(key + " , Count: " + value));
-
-        return generatedReport;
-    }
-
-    private String formatAppointments(Appointment appointment){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-        String formattedString = "Appointment ID: " + appointment.getAppointmentId() + " " +
-                "Title: " + appointment.getAppointmentTitle() + " " +
-                "Type: "+ appointment.getAppointmentType() + " " +
-                "Appointment Description: "+ appointment.getAppointmentDescription() + " " +
-                "Times " + appointment.getStartDateTime().format(formatter) + " " +
-                "through " + appointment.getEndDateTime().format(formatter) + " " +
-                "Customer ID: "+ appointment.getCustomerId();
-        return formattedString;
-    }
-
-    public ObservableList<String> createContactReport(List<Appointment> appointmentList){
-        ObservableList<String> report = FXCollections.observableArrayList();
-
-        // Uses stream to group appointments by contact ID first, then by contact name
-        Map<Integer, Map<String, List<Appointment>>> sortedByContactId = appointmentList.stream()
-                .collect(Collectors.groupingBy(Appointment::getContactId,
-                        Collectors.groupingBy(Appointment::getContactFullName)));
-
-        // next sort by contact name
-        sortedByContactId.forEach((contactId, sortedByContactFullName) -> {
-            sortedByContactFullName.forEach((contactName, resultList) -> {
-                // contact name added to the report
-                report.add("Contact Name: " + contactName + "\n Contact ID: " + contactId);
-
-                // Sort appointments by start date
-                resultList.sort(Comparator.comparing(Appointment::getStartDateTime));
-
-                // formatting, then adding appointment information to report
-                resultList.forEach(appointment -> {
-                    report.add(formatAppointments(appointment));
-                });
-
-                // reporting total appointments contact
-                report.add("Number of appointments for " + contactName + ": " + resultList.size());
-
-                // delimiter between each report
-                report.add("____End Report____");
-            });
-        });
-
-        return report;
-    }
-
-    private String formatCustomers(Customer customer){
-        String formattedString = "Customer Name: " + customer.getCustomerFullName()+ ", " +
-                "Customer ID: " + customer.getCustomerId() + ", " +
-                "Country: "+ customer.getCountry() + ", " +
-                "Division: "+ customer.getDivision() + ", " +
-                "Division ID: " + customer.getDivisionId() + ", " +
-                "Address: " + customer.getCustomerAddress() + ", " +
-                "Postal Code: "+ customer.getPostalCode() + ", " +
-                "Phone: "+ customer.getCustomerPhoneNumber();
-
-        return formattedString;
-    }
-
-    public ObservableList<String> createCountryReport(List<Customer> customerList){
-        ObservableList<String> report = FXCollections.observableArrayList();
-
-        // Uses stream to group appointments by contact ID first, then by division
-        Map<String, List<Customer>> sortedByCountry = customerList.stream()
-                .collect(Collectors.groupingBy(Customer::getCountry));
-
-        // next sort division
-        sortedByCountry.forEach((country, resultList) -> {
-                // contact name added to the report
-                report.add("Country: " + country);
-
-                // formatting, then adding appointment information to report
-                resultList.forEach(customer -> {
-                    report.add(formatCustomers(customer));
-                });
-
-                // reporting total appointments contact
-                report.add("Number of customers in "+ country +" = "+resultList.size());
-
-                // delimiter between each report
-                report.add("____End Report____");
-        });
-
-        return report;
-    }
-
     /**
      * Creates and displays the report based on the selected report type and options.
      * Resets the table view, then formats and populates the view with the relevant data.
@@ -257,20 +139,19 @@ public class HomeController implements Initializable {
         if(appointmentMonthTypeReport.isSelected()){
             // resets table view
             reportListView.getItems().clear();
-            reportListView.setItems(createMonthTypeReport(appointments));
+            reportListView.setItems(helper.Reports.getMonthTypeReport(appointments));
         }
 
         if(appointmentContactReport.isSelected()){
             reportListView.getItems().clear();
-            reportListView.setItems(createContactReport(appointments));
+            reportListView.setItems(helper.Reports.getContactReport(appointments));
         }
 
         if(appointmentCountryReport.isSelected()){
             reportListView.getItems().clear();
-            reportListView.setItems(createCountryReport(customers));
+            reportListView.setItems(helper.Reports.getCountryReport(customers));
         }
     }
-
 
     /**
      * Retrieves the selected appointment for modification.
