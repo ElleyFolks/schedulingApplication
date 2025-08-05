@@ -1,9 +1,6 @@
-# WGU C195 - Scheduling Application
-
 ## Information
 
 Author: Elley Folks
-Contact: efolks@wgu.edu
 Application Version: 2.0
 Date: 3/1/2024
 
